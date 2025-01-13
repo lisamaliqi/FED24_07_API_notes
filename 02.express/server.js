@@ -39,6 +39,30 @@ app.get("/lol", (req, res) => {
 	res.send("I was wondering why the frisbee kept getting bigger and bigger, but then it hit me.");
 });
 
+// Om man går in i localHost:3500/users så kommer detta att visas på sidan
+// JSON format fast i array
+app.get("/users", (req, res) => {
+	res.send([
+		{
+			username: "johan",
+			profile_picture: "https://thumb.ac-illust.com/3c/3cea0e36d984553348ca536f07ca7617_t.jpeg",
+		},
+		{
+			username: "pelle",
+			profile_picture: null,
+		},
+		{
+			username: "kajsa",
+			profile_picture: null,
+		},
+		{
+			username: "mimmi",
+			profile_picture: null,
+		},
+	]);
+});
+
+
 // Starta lyssningen av inkommande request på port 3500
 app.listen(PORT, () => {
 	// Will be invoked once the server has started listening
