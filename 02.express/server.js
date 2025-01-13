@@ -14,7 +14,13 @@ app.get("/", (req, res) => {
 	console.log("Someone requested my (g)root 🌲");
 	console.log("Requested method:", req.method);
 	console.log("Requested path:", req.path);
-	res.send("Oh, hi there 😊");
+	res.send({message: "Oh, hi there 😊"});
+});
+
+// Lyssna efter inkommande POST requests till "/"
+app.post("/", (req, res) => {
+	console.log("Someone tried to mail me something 💌");
+	res.send({ message: "I'm not a mailbox 😡" });
 });
 
 // Om man går in i localHost:3500/coffee så kommer detta att visas på sidan
