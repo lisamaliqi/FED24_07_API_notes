@@ -4,6 +4,12 @@
 
 // Require eller hämta ut express, sen ge PORT ett nummer på 3500 för localhost
 const express = require("express");
+
+//hämta ut jokes från onliners
+//WORKSHOP
+const oneliners = require('./data/oneliners.json');
+
+
 const PORT = 3500;
 // Skapa en ny express-app
 const app = express();
@@ -40,22 +46,23 @@ app.get("/coffee", (req, res) => {
 	});
 });
 
-
-
-
-
+//WORKSHOP
 // Listen for incoming GET requests to "/joke"
 app.get("/joke", (req, res) => {
 	// Somehow get all oneliners from `data/oneliners.json`
 	// Get a random oneliner from the array of oneliners
 	// Respond with an object with the oneliner as the `joke` attribute
+
+    //ta ut en random nummer mellan 0-längen på arrayen i oneliners
+    const i = Math.floor(Math.random() * oneliners.length);
+    //skämtet blir indexnumret i oneliners filen
+    const joke = oneliners[i];
+    
+    //skickar ut joke som en json sträng till webben
 	res.send({
-		joke: "I'm batman, *shhh*",
+		joke
 	});
 });
-
-
-
 
 
 // Om man går in i localHost:3500/lol så kommer detta visas på sidan
