@@ -68,6 +68,11 @@ app.get("/users", (req, res) => {
 	]);
 });
 
+// ifall användaren skriver en sida som inte finns i localhost:3500 
+app.use((req, res) => {
+	res.status(404).send({ message: `Cannot ${req.method} ${req.path}`});
+});
+
 
 // Starta lyssningen av inkommande request på port 3500
 app.listen(PORT, () => {
