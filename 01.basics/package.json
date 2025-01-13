@@ -3,11 +3,14 @@
     "version": "1.0.0",
     "main": "01-globals.js",
     "scripts": {
-      "start": "node 01-globals.js",
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "node 01-globals.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],
     "author": "",
     "license": "WTFPL",
-    "description": ""
-  }
+    "description": "",
+    "devDependencies": {
+        "nodemon": "^3.1.9"
+    }
+}

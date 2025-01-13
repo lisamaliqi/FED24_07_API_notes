@@ -23,3 +23,10 @@ node index.js
 ```
 
 osv.
+
+
+
+### Install 
+du kan inställera nodemon för en bättre "upplevelse", skriv $ npm install nodemon --save-dev i mappen du befinner dig i, ex 01.basics
+Detta är ifall du vill att terminalen ska uppdateras varje gång du sparar din fil, men det finns ett lättare sätt som är inbyggt 
+skriv istället node --watch global.js  (namnet på huvudfilen) så kommer det uppdateras automatiskt varje gång
