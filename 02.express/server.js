@@ -40,6 +40,24 @@ app.get("/coffee", (req, res) => {
 	});
 });
 
+
+
+
+
+// Listen for incoming GET requests to "/joke"
+app.get("/joke", (req, res) => {
+	// Somehow get all oneliners from `data/oneliners.json`
+	// Get a random oneliner from the array of oneliners
+	// Respond with an object with the oneliner as the `joke` attribute
+	res.send({
+		joke: "I'm batman, *shhh*",
+	});
+});
+
+
+
+
+
 // Om man går in i localHost:3500/lol så kommer detta visas på sidan
 app.get("/lol", (req, res) => {
 	res.send("I was wondering why the frisbee kept getting bigger and bigger, but then it hit me.");
