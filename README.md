@@ -27,6 +27,22 @@ osv.
 
 
 ### Install 
-du kan inställera nodemon för en bättre "upplevelse", skriv $ npm install nodemon --save-dev i mappen du befinner dig i, ex 01.basics
+du kan inställera nodemon för en bättre "upplevelse", skriv 
+$ npm install nodemon --save-dev 
+i mappen du befinner dig i, ex 01.basics
 Detta är ifall du vill att terminalen ska uppdateras varje gång du sparar din fil, men det finns ett lättare sätt som är inbyggt 
-skriv istället node --watch global.js  (namnet på huvudfilen) så kommer det uppdateras automatiskt varje gång
+skriv istället 
+node --watch global.js  
+(namnet på huvudfilen) så kommer det uppdateras automatiskt varje gång
+
+Installera express: 
+börja med att ställa dig i den mappen du vill skapa express i, sedan skriver du: 
+$ npm init 
+efter det så kommer du få svara på massor av frågor där du bara kan trycka return FÖRUTOM när det står:
+entry point: (index.js)
+här ska du istället för att trycka return skriva namnet på vad du vill att "huvudfilen" för js ska heta, ex:
+entry point: (index.js) server.js
+efter detta kör du:
+$ npm install express
+Allt klart!
+
