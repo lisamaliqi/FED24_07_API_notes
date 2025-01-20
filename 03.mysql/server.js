@@ -108,6 +108,12 @@ app.post("/users", async (req, res) => {
     //få ut username, name och email
     const { username, name, email } = req.body;
 
+    // STEP 1: Check that all required data is present, otherwise fail with HTTP 400
+
+	// STEP 2: Check that the incoming data is of the correct datatype
+    
+	// STEP 3: Check that the username is at least 2 chars long and email contains a `@`
+
     //hämta ut databas
 	const db = await connection;
 
