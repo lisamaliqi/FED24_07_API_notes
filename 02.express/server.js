@@ -13,6 +13,8 @@ const app = express();
 const oneliners = require('./data/oneliners.json');
 const _ = require('lodash');
 
+//läsa onliners från textfil med fs
+const fs = require("node:fs/promises");
 
 
 // Lyssna efter inkommande GET requests till "/"
@@ -63,7 +65,7 @@ app.get("/joke", (req, res) => {
 
     // const joke = oneliners[i];
 
-    
+
     //detta är mest optimalt, slipper ha två const (i och joke, räcker med joke)
     const joke = _.sample(oneliners);
     
@@ -78,6 +80,33 @@ app.get("/joke", (req, res) => {
 app.get("/lol", (req, res) => {
 	res.send("I was wondering why the frisbee kept getting bigger and bigger, but then it hit me.");
 });
+
+
+// Om man går in i localHost:3000/textjoke så kommer detta visas på sidan
+app.get("/textjoke", async (req, res) => {
+	try {
+        //läser av filen oneliners.txt
+		const rawFile = await fs.readFile("./data/oneliners.txt", { encoding: "utf-8" });
+
+        //split filen till ny rad
+		const oneliners = rawFile.split("\n");
+
+		// sampla arrayen med oneliners (aka ta ut random)
+		const joke = _.sample(oneliners);
+		res.send({
+			joke,  // joke: joke
+		});
+        
+        //ifall något går fel:
+	} catch (err) {
+		console.error("ERROR! ERROR! Could not find ./data/oneliners.txt!");
+		// Let the requester know something has gone wrong
+		res.status(500).send({
+			message: "Could not read file with oneliners 😢",
+		});
+	}
+});
+
 
 // Om man går in i localHost:3000/users så kommer detta att visas på sidan
 // JSON format fast i array
