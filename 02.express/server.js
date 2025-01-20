@@ -77,6 +77,15 @@ app.get('/users/:userId', (req, res) => {
 
     //leta efter vilken användare det är i users.json filen genom att find() user.id som stämmer med det vi skriver in i url
 	const user = users.find((user) => user.id === userId);
+
+    //steg 2
+    //om user inte är true, gör detta:
+    if(!user) {
+        console.log('error!');
+        //skicka res.status som 404 (error) samt skicka meddelande 
+        res.status(404).send({ message: 'User not found'});
+        return; 
+    }
     
     //gör sedan en response med user som vi hittar (find)
 	res.send(user);
