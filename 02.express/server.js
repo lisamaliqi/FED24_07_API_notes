@@ -63,6 +63,26 @@ app.get("/users/:userId/books/:bookId", (req, res) => {
 	res.send({ message: "Would send book if I could" });
 });
 
+/**
+ * WORKSHOP 2025-01-09
+ * Steg 1: Skapa en route som gör att vi kan hämta ut enskilda användare baserat på deras ID.
+ * Steg 2: Om en användare inte finns så ska en response med `404` skickas.
+ * Steg 3: Lägg till felhantering, t.ex. om användaren skickar in `"apa"` istället för ett ID.
+ */
+
+app.get('/users/:userId', (req, res) => {
+    //hämta ut värdet av det vi lägger in som userId när vi söker i url 
+    //gör sedan om detta värdet till ett nummer
+	const userId = Number(req.params.userId);
+
+    //leta efter vilken användare det är i users.json filen genom att find() user.id som stämmer med det vi skriver in i url
+	const user = users.find((user) => user.id === userId);
+    
+    //gör sedan en response med user som vi hittar (find)
+	res.send(user);
+});
+
+
 // Lyssna efter inkommande POST requests till "/"
 app.post("/", (req, res) => {
     //behövs ej med middleware
@@ -88,7 +108,9 @@ app.get("/coffee", (req, res) => {
 	});
 });
 
-//WORKSHOP
+/**
+ * WORKSHOP 2025-01-08
+ */
 // Listen for incoming GET requests to "/joke"
 app.get("/joke", (req, res) => {
 	// Somehow get all oneliners from `data/oneliners.json`
