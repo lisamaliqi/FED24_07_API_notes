@@ -46,3 +46,10 @@ efter detta kör du:
 $ npm install express
 Allt klart!
 
+
+Installera morgan: 
+Samma som express, skriv
+$ npm init
+sedan skriver du
+$ npm install morgan 
+Klart!
