@@ -105,13 +105,21 @@ app.get("/users/:userId", async (req, res) => {
  */
 app.post("/users", async (req, res) => {
 	console.log("Incoming! 🚀", req.body);
+    //få ut username, name och email
+    const { username, name, email } = req.body;
+
+    //hämta ut databas
 	const db = await connection;
+
+    //skapa din query
 	const [ result ] = await db.query("INSERT INTO users SET username = ?, name = ?, email = ?", [
-		req.body.username,
-		req.body.name,
-		req.body.email,
+		username,
+		name,
+		email,
 	]);
+
 	console.log("Result:", result);
+    
 	// Send back the received data and append the id of the newly created record
 	res.send({
 		...req.body,
