@@ -16,6 +16,11 @@ const _ = require('lodash');
 //läsa onliners från textfil med fs
 const fs = require("node:fs/promises");
 
+//hämta ut morgan
+const morgan = require('morgan');
+//logga ut information om inkommande request med hjälp utav morgan logging middleware
+//man behöver alltså inte skriva den middlewaren vi skrev nedan, det är i princip onödigt 
+app.use(morgan("dev"));
 
 /**
  * Logga till consollen ang alla inkommande requests
@@ -107,7 +112,6 @@ app.get("/textjoke", async (req, res) => {
 	try {
         //läser av filen oneliners.txt
 		const rawFile = await fs.readFile("./data/oneliners.txt", { encoding: "utf-8" });
-
         //split filen till ny rad
 		const oneliners = rawFile.split("\n");
 
