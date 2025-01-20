@@ -4,18 +4,18 @@
 
 // Require eller hämta ut express, sen ge PORT ett nummer på 3500 för localhost
 const express = require("express");
+const PORT = 3000;
+// Skapa en ny express-app
+const app = express();
 
 //hämta ut jokes från onliners
 //WORKSHOP
 const oneliners = require('./data/oneliners.json');
 
 
-const PORT = 3500;
-// Skapa en ny express-app
-const app = express();
 
 // Lyssna efter inkommande GET requests till "/"
-// om man går in i localHost:3400 så kommer detta loggas i terminalen 
+// om man går in i localHost:3000 så kommer detta loggas i terminalen 
 app.get("/", (req, res) => {
 	console.log("Someone requested my (g)root 🌲");
 	console.log("Requested method:", req.method);
@@ -29,7 +29,7 @@ app.post("/", (req, res) => {
 	res.send({ message: "I'm not a mailbox 😡" });
 });
 
-// Om man går in i localHost:3500/coffee så kommer detta att visas på sidan
+// Om man går in i localHost:3000/coffee så kommer detta att visas på sidan
 // Kommer synas som en JSON fil i webben 
 app.get("/coffee", (req, res) => {
 	console.log("☕️ yum");
@@ -65,12 +65,12 @@ app.get("/joke", (req, res) => {
 });
 
 
-// Om man går in i localHost:3500/lol så kommer detta visas på sidan
+// Om man går in i localHost:3000/lol så kommer detta visas på sidan
 app.get("/lol", (req, res) => {
 	res.send("I was wondering why the frisbee kept getting bigger and bigger, but then it hit me.");
 });
 
-// Om man går in i localHost:3500/users så kommer detta att visas på sidan
+// Om man går in i localHost:3000/users så kommer detta att visas på sidan
 // JSON format fast i array
 app.get("/users", (req, res) => {
 	res.send([
@@ -93,13 +93,13 @@ app.get("/users", (req, res) => {
 	]);
 });
 
-// ifall användaren skriver en sida som inte finns i localhost:3500 
+// ifall användaren skriver en sida som inte finns i localhost:3000 
 app.use((req, res) => {
 	res.status(404).send({ message: `Cannot ${req.method} ${req.path}`});
 });
 
 
-// Starta lyssningen av inkommande request på port 3500
+// Starta lyssningen av inkommande request på port 3000
 app.listen(PORT, () => {
 	// Will be invoked once the server has started listening
 	console.log(`🥳 Yay, server started on localhost:${PORT}`);
