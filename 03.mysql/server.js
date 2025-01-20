@@ -108,17 +108,25 @@ app.post("/users", async (req, res) => {
     //få ut username, name och email
     const { username, name, email } = req.body;
 
+    /**WORKSHOP */
     // STEP 1: Check that all required data is present, otherwise fail with HTTP 400
-    if(!username || !email){
+    // STEP 2: Check that the incoming data is of the correct datatype
+    // STEP 3: Check that the username is at least 2 chars long and email contains a `@`
+
+    if(!username || typeof username !== 'string' || !username.trim().length < 2){
         res.status(404).send({
-            message: "username or email is missing",
+            message: "username is missing, not a string or less than 2 characters",
         });
         return;
     };
 
-	// STEP 2: Check that the incoming data is of the correct datatype
+    if(!email || typeof email !== 'string' || !email.includes('@')){
+        res.status(404).send({
+            message: "email is missing, not a string or doesnt include a '@'",
+        });
+        return;
+    };
 
-	// STEP 3: Check that the username is at least 2 chars long and email contains a `@`
 
     //hämta ut databas
 	const db = await connection;
