@@ -75,11 +75,20 @@ app.get('/users/:userId', (req, res) => {
     //gör sedan om detta värdet till ett nummer
 	const userId = Number(req.params.userId);
 
+    //steg 3
+    //om userId inte är true, alltså inte är ett nummer, gör detta:
+    if(!userId) {
+        console.log('error!');
+        //skicka res.status som 404 (error) samt skicka meddelande 
+        res.status(404).send({ message: 'Thats not a number idiot'});
+        return; 
+    }
+
     //leta efter vilken användare det är i users.json filen genom att find() user.id som stämmer med det vi skriver in i url
 	const user = users.find((user) => user.id === userId);
 
     //steg 2
-    //om user inte är true, gör detta:
+    //om userId inte passar in med något från user.id i json-filen, gör detta:
     if(!user) {
         console.log('error!');
         //skicka res.status som 404 (error) samt skicka meddelande 
