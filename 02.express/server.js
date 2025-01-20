@@ -59,9 +59,13 @@ app.get("/joke", (req, res) => {
     //skämtet blir indexnumret i oneliners filen
 
     //lodash versionen av det som är tidigare (ta ut random från oneliner)
-    const i = _.random(oneliners.length - 1);
+    // const i = _.random(oneliners.length - 1);
 
-    const joke = oneliners[i];
+    // const joke = oneliners[i];
+
+    
+    //detta är mest optimalt, slipper ha två const (i och joke, räcker med joke)
+    const joke = _.sample(oneliners);
     
     //skickar ut joke som en json sträng till webben
 	res.send({
