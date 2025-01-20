@@ -52,6 +52,17 @@ app.get("/", (req, res) => {
 	res.send({message: "Oh, hi there 😊"});
 });
 
+//skicka in dessa exempel i webburl:
+
+// "/users/johan/books/typescript-my-eternal-love"
+// "/users/pelle/books/pride&predjudice"
+// "/users/SOMETHING/books/SOMETHINGELSE"
+// "/users/lajsamanelli/books/READ-BITCH"
+app.get("/users/:userId/books/:bookId", (req, res) => {
+	console.log("Params:", req.params);
+	res.send({ message: "Would send book if I could" });
+});
+
 // Lyssna efter inkommande POST requests till "/"
 app.post("/", (req, res) => {
     //behövs ej med middleware
