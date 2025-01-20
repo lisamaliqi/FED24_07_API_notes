@@ -98,6 +98,28 @@ app.get("/users/:userId", async (req, res) => {
 });
 
 
+/**
+ * POST /users
+ *
+ * Create a user
+ */
+app.post("/users", async (req, res) => {
+	console.log("Incoming! 🚀", req.body);
+	const db = await connection;
+	const [ result ] = await db.query("INSERT INTO users SET username = ?, name = ?, email = ?", [
+		req.body.username,
+		req.body.name,
+		req.body.email,
+	]);
+	console.log("Result:", result);
+	// Send back the received data and append the id of the newly created record
+	res.send({
+		...req.body,
+		id: result.insertId,
+	});
+});
+
+
 // Catch-all route
 app.use((req, res) => {
 	res.status(404).send({ message: `Cannot ${req.method} ${req.path}`});
