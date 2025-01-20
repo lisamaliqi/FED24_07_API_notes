@@ -121,7 +121,8 @@ app.post("/users", async (req, res) => {
 	console.log("Result:", result);
 
 	// Send back the received data and append the id of the newly created record
-	res.send({
+    //skickar 201 tillbaka (created) 
+	res.status(201).send({
 		...req.body,
 		id: result.insertId,
 	});
