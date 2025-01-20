@@ -16,6 +16,9 @@ const _ = require('lodash');
 //läsa onliners från textfil med fs
 const fs = require("node:fs/promises");
 
+//hämtar ut users från users.json i data
+const users = require("./data/users.json");
+
 //hämta ut morgan
 const morgan = require('morgan');
 //logga ut information om inkommande request med hjälp utav morgan logging middleware
@@ -135,7 +138,7 @@ app.get("/textjoke", async (req, res) => {
 // Om man går in i localHost:3000/users så kommer detta att visas på sidan
 // JSON format fast i array
 app.get("/users", (req, res) => {
-	res.send([
+	/* res.send([
 		{
 			username: "johan",
 			profile_picture: "https://thumb.ac-illust.com/3c/3cea0e36d984553348ca536f07ca7617_t.jpeg",
@@ -152,7 +155,9 @@ app.get("/users", (req, res) => {
 			username: "mimmi",
 			profile_picture: null,
 		},
-	]);
+	]); */
+    //byter ut manuellt users med users från users.json i data
+    res.send(users);
 });
 
 // ifall användaren skriver en sida som inte finns i localhost:3000 
