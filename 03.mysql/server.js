@@ -109,9 +109,15 @@ app.post("/users", async (req, res) => {
     const { username, name, email } = req.body;
 
     // STEP 1: Check that all required data is present, otherwise fail with HTTP 400
+    if(!username || !email){
+        res.status(404).send({
+            message: "username or email is missing",
+        });
+        return;
+    };
 
 	// STEP 2: Check that the incoming data is of the correct datatype
-    
+
 	// STEP 3: Check that the username is at least 2 chars long and email contains a `@`
 
     //hämta ut databas
