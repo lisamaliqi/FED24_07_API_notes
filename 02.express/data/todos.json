@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Do stuff",
+    "completed": false,
+    "due_date": null,
+    "user_id": 1
+  },
+  {
+    "id": 3,
+    "title": "Do more stuff",
+    "completed": true,
+    "due_date": 1337,
+    "user_id": 4
+  },
+  {
+    "id": 8,
+    "title": "Do EVEN MOAR stuff",
+    "completed": false,
+    "due_date": 1337,
+    "user_id": 4
+  }
+]
