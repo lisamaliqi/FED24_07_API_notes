@@ -61,3 +61,8 @@ $ npm init
 sedan skriver du
 $ npm install lodash 
 Klart!
+
+
+
+### Postman
+Du kan göra get, post, delete, patch och put om du gåt in i postman appen, sedan skriver du manuellt in localhost om det är det du använder, ex http://localhost:3000/users så kommer alla users från den filen man befinner sig i. 
