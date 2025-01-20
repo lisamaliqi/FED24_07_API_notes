@@ -23,6 +23,11 @@ const fs = require("node:fs/promises");
  */
 app.use((req, res, next) => {
 	console.log("Someone requested something 😄");
+
+    //hämta ut dagen du gör requesten, samt vad för metod (get oftast) och vilken path (väg)
+    const now = new Date();
+	console.log(`${now.toLocaleString()} - ${req.method} ${req.path}`);
+
     //skicka vidare requesten till nästa funktion i koden, hade man ej haft next() så hade sidorna aldrig laddat
 	next();
 });
@@ -32,22 +37,25 @@ app.use((req, res, next) => {
 // Lyssna efter inkommande GET requests till "/"
 // om man går in i localHost:3000 så kommer detta loggas i terminalen 
 app.get("/", (req, res) => {
-	console.log("Someone requested my (g)root 🌲");
-	console.log("Requested method:", req.method);
-	console.log("Requested path:", req.path);
+    //dessa behövs inte när man har middleware
+	// console.log("Someone requested my (g)root 🌲");
+	// console.log("Requested method:", req.method);
+	// console.log("Requested path:", req.path);
 	res.send({message: "Oh, hi there 😊"});
 });
 
 // Lyssna efter inkommande POST requests till "/"
 app.post("/", (req, res) => {
-	console.log("Someone tried to mail me something 💌");
+    //behövs ej med middleware
+	// console.log("Someone tried to mail me something 💌");
 	res.send({ message: "I'm not a mailbox 😡" });
 });
 
 // Om man går in i localHost:3000/coffee så kommer detta att visas på sidan
 // Kommer synas som en JSON fil i webben 
 app.get("/coffee", (req, res) => {
-	console.log("☕️ yum");
+    //behövs ej med middleware
+	// console.log("☕️ yum");
 	res.send({
 		can_you_have_too_much: false,
 		coffee: "is good for you",
