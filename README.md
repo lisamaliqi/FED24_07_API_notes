@@ -53,3 +53,11 @@ $ npm init
 sedan skriver du
 $ npm install morgan 
 Klart!
+
+
+Installera lodash
+Samma som express, skriv
+$ npm init
+sedan skriver du
+$ npm install lodash 
+Klart!
