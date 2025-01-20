@@ -17,6 +17,18 @@ const _ = require('lodash');
 const fs = require("node:fs/promises");
 
 
+/**
+ * Logga till consollen ang alla inkommande requests
+ * MIDDLEWARE
+ */
+app.use((req, res, next) => {
+	console.log("Someone requested something 😄");
+    //skicka vidare requesten till nästa funktion i koden, hade man ej haft next() så hade sidorna aldrig laddat
+	next();
+});
+
+
+
 // Lyssna efter inkommande GET requests till "/"
 // om man går in i localHost:3000 så kommer detta loggas i terminalen 
 app.get("/", (req, res) => {
@@ -96,7 +108,7 @@ app.get("/textjoke", async (req, res) => {
 		res.send({
 			joke,  // joke: joke
 		});
-        
+
         //ifall något går fel:
 	} catch (err) {
 		console.error("ERROR! ERROR! Could not find ./data/oneliners.txt!");
