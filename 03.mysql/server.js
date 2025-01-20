@@ -112,14 +112,14 @@ app.post("/users", async (req, res) => {
 	const db = await connection;
 
     //skapa din query
-	const [ result ] = await db.query("INSERT INTO users SET username = ?, name = ?, email = ?", [
+	const [ result ] = await db.query("INSERT INTO users SET ?", {
 		username,
 		name,
 		email,
-	]);
+    });
 
 	console.log("Result:", result);
-    
+
 	// Send back the received data and append the id of the newly created record
 	res.send({
 		...req.body,
