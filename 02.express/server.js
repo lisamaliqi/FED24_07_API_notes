@@ -8,6 +8,9 @@ const PORT = 3000;
 // Skapa en ny express-app
 const app = express();
 
+// Parse all inkommande JSON
+app.use(express.json());
+
 //hämta ut jokes från onliners
 //WORKSHOP
 const oneliners = require('./data/oneliners.json');
@@ -210,6 +213,19 @@ app.get("/users", (req, res) => {
     //byter ut manuellt users med users från users.json i data
     res.send(users);
 });
+
+
+//lyssna efter post requests i postman på /users
+app.post("/users", (req, res) => {
+	console.log("Create user?");
+	// Somehow get the user information that the requester sent in
+	console.log("req.body:", req.body);
+	console.log("username:", req.body.username);
+	console.log("name:", req.body.name);
+	console.log("email:", req.body.email);
+	res.send({ message: "Would create user if I could" });
+});
+
 
 // ifall användaren skriver en sida som inte finns i localhost:3000 
 app.use((req, res) => {
