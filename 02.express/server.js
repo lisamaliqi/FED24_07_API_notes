@@ -11,6 +11,7 @@ const app = express();
 //hämta ut jokes från onliners
 //WORKSHOP
 const oneliners = require('./data/oneliners.json');
+const _ = require('lodash');
 
 
 
@@ -54,8 +55,12 @@ app.get("/joke", (req, res) => {
 	// Respond with an object with the oneliner as the `joke` attribute
 
     //ta ut en random nummer mellan 0-längen på arrayen i oneliners
-    const i = Math.floor(Math.random() * oneliners.length);
+    // const i = Math.floor(Math.random() * oneliners.length);
     //skämtet blir indexnumret i oneliners filen
+
+    //lodash versionen av det som är tidigare (ta ut random från oneliner)
+    const i = _.random(oneliners.length - 1);
+
     const joke = oneliners[i];
     
     //skickar ut joke som en json sträng till webben
