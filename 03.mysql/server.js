@@ -149,6 +149,37 @@ app.post("/users", async (req, res) => {
 });
 
 
+/**
+ * PATCH /users/:userId
+ *
+ * Update a single user
+ */
+/**
+ * WORKSHOP 2025-01-14
+ */
+
+app.patch("/users/:userId", async (req, res) => {
+    //gör om userId till ett nummer
+	const userId = Number(req.params.userId);
+
+    //om userId inte kan vara ett nummer, alltså falsy (nan) gör detta: 
+	if (!userId) {
+		res.status(400).send({
+			message: "Invalid User ID",
+		});
+		return;
+	}
+
+    //skapa en databas
+	const db = await connection;
+
+    //skapa sedan din query som gör att du kan skriva din patch
+	const [ result ] = await db.query("UPDATE users SET ? WHERE id = ?", [req.body, userId]);  
+	res.send(req.body);
+});
+
+
+
 // Catch-all route
 app.use((req, res) => {
 	res.status(404).send({ message: `Cannot ${req.method} ${req.path}`});
