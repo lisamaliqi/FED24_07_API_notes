@@ -113,15 +113,15 @@ app.post("/users", async (req, res) => {
     // STEP 2: Check that the incoming data is of the correct datatype
     // STEP 3: Check that the username is at least 2 chars long and email contains a `@`
 
-    if(!username || typeof username !== 'string' || !username.trim().length < 2){
-        res.status(404).send({
+    if(!username || typeof username !== 'string' || username.trim().length < 2){
+        res.status(400).send({
             message: "username is missing, not a string or less than 2 characters",
         });
         return;
     };
 
     if(!email || typeof email !== 'string' || !email.includes('@')){
-        res.status(404).send({
+        res.status(400).send({
             message: "email is missing, not a string or doesnt include a '@'",
         });
         return;
