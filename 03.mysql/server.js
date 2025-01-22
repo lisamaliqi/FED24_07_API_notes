@@ -162,6 +162,9 @@ app.patch("/users/:userId", async (req, res) => {
     //gör om userId till ett nummer
 	const userId = Number(req.params.userId);
 
+    //få ut username, name och email
+    const { username, name, email } = req.body;
+
     //om userId inte kan vara ett nummer, alltså falsy (nan) gör detta: 
 	if (!userId) {
 		res.status(400).send({
@@ -169,6 +172,29 @@ app.patch("/users/:userId", async (req, res) => {
 		});
 		return;
 	}
+
+    //Validering
+    //om username är true OCH sedan validering 
+    if(username && (!username || typeof username !== 'string' || username.trim().length < 2)){
+        res.status(400).send({
+            message: "username is missing, not a string or less than 2 characters",
+        });
+        return;
+    };
+
+    if(name && (!name || typeof name !== 'string' || name.trim().length < 2)){
+        res.status(400).send({
+            message: "name is missing, not a string or less than 2 characters",
+        });
+        return;
+    };
+
+    if(email && (!email || typeof email !== 'string' || !email.includes("@"))){
+        res.status(400).send({
+            message: "email is missing, not a string or doesnt include snable-a",
+        });
+        return;
+    };
 
     //skapa en databas
 	const db = await connection;
