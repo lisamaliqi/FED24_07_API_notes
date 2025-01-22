@@ -223,6 +223,44 @@ app.patch("/users/:userId", async (req, res) => {
 	res.send(req.body);
 });
 
+/**
+ * DELETE /users/:userId
+ *
+ * Delete a single user
+ */
+app.delete("/users/:userId", async (req, res) => {
+    const userId = Number(req.params.userId);
+
+    if(!userId) {
+        res.status(400).send({
+            message: 'invalid userId'
+        });
+        return;
+    };
+
+    const db = await connection;
+
+    try {
+        const [ result ] = await db.query('DELETE FROM users WHERE id= ?', [userId]);
+        console.log('result: ', result);
+
+        if(!result.affectedRows) {
+            res.status(404).send({
+                message: 'Why u wanna delete?? This user doesnt exist?',
+            });
+            return;
+        };
+    } catch (err) {
+        res.status(400).send({
+            message: 'u just sent some bad data young person...',
+        });
+        return;
+    };
+    res.send({
+        message: 'deleted',
+    });
+});
+
 
 
 // Catch-all route
