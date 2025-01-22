@@ -77,7 +77,7 @@ app.get("/users/:userId", async (req, res) => {
         //skicka res.status som 404 (error) samt skicka meddelande 
         res.status(404).send({ message: 'Thats not a number idiot'});
         return; 
-    }
+    };
 
     //hämta ut databas från connection
     const db = await connection;
@@ -92,7 +92,7 @@ app.get("/users/:userId", async (req, res) => {
 			message: "User Not Found",
 		});
 		return;
-	}
+	};
 	// skicka response med rows
 	res.send(rows[0]);
 });
@@ -171,7 +171,7 @@ app.patch("/users/:userId", async (req, res) => {
 			message: "Invalid User ID",
 		});
 		return;
-	}
+	};
 
     //Validering
     //om username är true OCH sedan validering 
@@ -199,8 +199,27 @@ app.patch("/users/:userId", async (req, res) => {
     //skapa en databas
 	const db = await connection;
 
-    //skapa sedan din query som gör att du kan skriva din patch
-	const [ result ] = await db.query("UPDATE users SET ? WHERE id = ?", [req.body, userId]);  
+    //try-catch
+    try {
+        //skapa din query som gör att du kan skriva din patch
+		const [ result ] = await db.query("UPDATE users SET ? WHERE id = ?", [req.body, userId]);  // YOLO
+		console.log("Result:", result);
+
+        //om affectedRows av resultatet är 0, skicka detta meddelande
+        //allstå om man försöker uppdatera en användare som inte finns
+		if (!result.affectedRows) {
+			res.status(404).send({
+				message: "Y U UPDATE USER THAT NOT EXIST",
+			});
+			return;
+		};
+	} catch (err) {
+		res.status(400).send({
+			message: "Y U SEND BAD DATA?!",
+		});
+		return;
+	};
+
 	res.send(req.body);
 });
 
