@@ -68,7 +68,14 @@ async function main() {
 	console.log("First user:", first_user);
 
 
-    
+    // Get the user with ID 7
+	const leeloo = await prisma.users.findUnique({
+		where: {
+			id: 7,
+		},
+	});
+	console.log("Leeloo:", leeloo);
+
 };
 
 main()
