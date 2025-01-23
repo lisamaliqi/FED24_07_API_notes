@@ -21,6 +21,13 @@ app.get("/", (req, res) => {
  * Get all phones
  */
 app.get("/phones", async (req, res) => {
+    try {
+		const phones = await prisma.phones.findMany();
+		res.send(phones);
+	} catch (err) {
+		console.error(err);
+		res.status(500).send({ message: "Something went wrong when querying the database" });
+	}
 });
 
 /**
@@ -37,6 +44,15 @@ app.get("/phones/:phoneId", async (req, res) => {
  * Get all users
  */
 app.get("/users", async (req, res) => {
+    try {
+        const users = await prisma.users.findMany();
+        res.send(users);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            message: 'Something went wrong with getting the users',
+        });
+    };
 });
 
 /**
