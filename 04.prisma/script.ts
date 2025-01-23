@@ -3,14 +3,58 @@ import { log } from "console";
 const prisma = new PrismaClient();
 
 async function main() {
-	// ... you will write your Prisma Client queries here
 	console.log("It works?");
 
-    // Hämta ut alla phones från databasen och logga ut det i konsollen med prisma 
+    // (GET)Hämta ut alla phones från databasen och logga ut det i konsollen med prisma 
 	// SELECT * FROM phones
-	const phones = await prisma.phones.findMany();
-	console.log("Phones:", phones);
-}
+	const phones1 = await prisma.phones.findMany();
+	console.log("Phones1:", phones1);
+
+
+    // (GET)Hämta ut alla phones men endast manufacturer och model kollumnerna 
+	// SELECT manufacturer, model FROM phones
+	const phones2 = await prisma.phones.findMany({
+		select: {
+			manufacturer: true,
+			model: true,
+		},
+	});
+    console.log('phones2: ', phones2);
+    
+
+    // (GET) Hämta alla mobiler där manufacturer == 'Apple'
+	// SELECT * FROM phones WHERE manufacturer = "Apple"
+	const phones3 = await prisma.phones.findMany({
+		where: {
+			manufacturer: "Apple",
+		},
+	});
+	console.log("Phones3:", phones3);
+
+
+    // (GET) Hämta några användare och logga dem till konsollen
+	// SELECT * FROM users
+	const users = await prisma.users.findMany({ 
+		// where: {
+		// 	name: {
+		// 		contains: "An",    // WHERE `name` LIKE "%An%"
+		// 		// startsWith: "Th",  // WHERE `name` LIKE "Th%"
+		// 		// endsWith: "an",       // WHERE `name` LIKE "%an"
+		// 	},
+		// },
+		orderBy: [
+			{
+				name: "asc",          // ORDER BY `name` ASC, sortera från a-z
+			},
+			{
+				title: "asc",         // ORDER BY `name`, `title`
+			},
+		],
+		take: 2,                      // LIMIT 2, ta bara två stycken från listan 
+		skip: 4,                      // OFFSET 4, skippa de fyra första
+	});
+	console.log("Users:", users);
+};
 
 main()
 	.then(async () => {
