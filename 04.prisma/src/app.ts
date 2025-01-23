@@ -36,6 +36,38 @@ app.get("/phones", async (req, res) => {
  * Get a single phone
  */
 app.get("/phones/:phoneId", async (req, res) => {
+    const phoneId = Number(req.params.phoneId);
+    
+    if(!phoneId) {
+        console.log('error!');
+        res.status(404).send({
+            message: 'Thats not a valid id',
+        });
+        return;
+    };
+
+    try {
+        const phone = await prisma.phones.findUnique({
+            where: {
+                id: phoneId,
+            }, 
+            include: {
+                user: true,
+            },
+        });
+
+        if (!phone) {
+			res.status(404).send({ message: "Phone Not Found" });
+			return;
+		};
+
+        res.send(phone);
+
+    } catch (err) {
+        console.log('error!');
+		res.status(500).send({ message: "Something went wrong when querying the database" });
+    };
+
 });
 
 /**
@@ -61,6 +93,41 @@ app.get("/users", async (req, res) => {
  * Get a single user
  */
 app.get("/users/:userId", async (req, res) => {
+    const userId = Number(req.params.userId);
+
+    if(!userId) {
+        console.log('error!');
+        res.status(404).send({
+            message: 'Thats not a valid id',
+        });
+        return;
+    };
+
+    try {
+        const user = await prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                phones: true,
+            },
+        });
+
+        if(!user) {
+            res.status(404).send({
+                message: 'user not found',
+            });
+            return;
+        };
+
+        res.send(user);
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            message: 'Something went wrong',
+        });
+    };
 });
 
 export default app;
