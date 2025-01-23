@@ -120,6 +120,35 @@ app.post("/phones", async (req, res) => {
 	}
 });
 
+/**
+ * PATCH /phones/:phoneId
+ *
+ * Update a phone
+ */
+app.patch("/phones/:phoneId", async (req, res) => {
+	const phoneId = Number(req.params.phoneId);
+
+	if (!phoneId) {
+		res.status(400).send({ message: "That is not a valid ID" });
+		return;
+	}
+
+	try {
+		const phone = await prisma.phones.update({
+			where: {
+				id: phoneId,
+			},
+			data: req.body,
+		});
+		res.status(200).send(phone);
+
+	} catch (err) {
+		console.error(err);
+		const { status, message } = handlePrismaError(err);
+		res.status(status).send({ message });
+	}
+});
+
 
 
 
@@ -202,6 +231,35 @@ app.post("/users", async (req, res) => {
 			data: req.body,
 		});
 		res.status(201).send(user);
+        
+	} catch (err) {
+		console.error(err);
+		const { status, message } = handlePrismaError(err);
+		res.status(status).send({ message });
+	}
+});
+
+/**
+ * PATCH /users/:userId
+ *
+ * Update a user
+ */
+app.patch("/users/:userId", async (req, res) => {
+	const userId = Number(req.params.userId);
+
+	if (!userId) {
+		res.status(400).send({ message: "That is not a valid ID" });
+		return;
+	}
+
+	try {
+		const user = await prisma.users.update({
+			where: {
+				id: userId,
+			},
+			data: req.body,
+		});
+		res.status(200).send(user);
         
 	} catch (err) {
 		console.error(err);
