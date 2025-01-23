@@ -68,7 +68,7 @@ async function main() {
 	console.log("First user:", first_user);
 
 
-    // Get the user with ID 7
+    // (GET) user med ID = 7
 	const leeloo = await prisma.users.findUnique({
 		where: {
 			id: 7,
@@ -76,6 +76,19 @@ async function main() {
 	});
 	console.log("Leeloo:", leeloo);
 
+
+    // (GET) hämta user med id = 4 eller "kasta"
+    // Testa ett felaktigt id för att få err
+	try {
+		const haxx0r_user = await prisma.users.findUniqueOrThrow({
+			where: {
+				id: 4,
+			},
+		});
+		console.log("haxx0r_user:", haxx0r_user.name);
+	} catch (err) {
+		console.log("Probably didnt find user");
+	}
 };
 
 main()
