@@ -54,6 +54,21 @@ async function main() {
 		skip: 4,                      // OFFSET 4, skippa de fyra första
 	});
 	console.log("Users:", users);
+
+
+    // (GET) Hämta första user som matchar vår query
+    // Retunerar ett objekt eller null ifall inga rows matchar queryn
+	const first_user = await prisma.users.findFirst({
+		where: {
+			name: {
+				startsWith: "Th",
+			},
+		},
+	});
+	console.log("First user:", first_user);
+
+
+    
 };
 
 main()
