@@ -89,6 +89,30 @@ async function main() {
 	} catch (err) {
 		console.log("Probably didnt find user");
 	}
+
+
+    // (GET) Hämta ut phone med id = 1 SAMT inkludera user (användaren)
+	const nokia_8110 = await prisma.phones.findUnique({
+		where: {
+			id: 1,
+		},
+		include: {
+			user: true,
+		},
+	});
+	console.log("info about Nokia 8110 and its user:", nokia_8110);
+
+
+    // (GET) hämta ut user och dess mobil (ifall det finns en mobil);
+	const user_with_phone = await prisma.users.findUnique({
+		where: {
+			id: 5,
+		},
+		include: {
+			phones: true,
+		},
+	});
+	console.log("User with phone:", user_with_phone);
 };
 
 main()
