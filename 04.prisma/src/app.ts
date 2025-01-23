@@ -149,6 +149,34 @@ app.patch("/phones/:phoneId", async (req, res) => {
 	}
 });
 
+/**
+ * DELETE /phones/:phoneId
+ *
+ * Delete a phone
+ */
+app.delete("/phones/:phoneId", async (req, res) => {
+	const phoneId = Number(req.params.phoneId);
+
+	if (!phoneId) {
+		res.status(400).send({ message: "That is not a valid ID" });
+		return;
+	}
+
+	try {
+		await prisma.phones.delete({
+			where: {
+				id: phoneId,
+			},
+		});
+		res.status(204).send();
+
+	} catch (err) {
+		console.error(err);
+		const { status, message } = handlePrismaError(err);
+		res.status(status).send({ message });
+	}
+});
+
 
 
 
@@ -260,6 +288,34 @@ app.patch("/users/:userId", async (req, res) => {
 			data: req.body,
 		});
 		res.status(200).send(user);
+
+	} catch (err) {
+		console.error(err);
+		const { status, message } = handlePrismaError(err);
+		res.status(status).send({ message });
+	}
+});
+
+/**
+ * DELETE /users/:userId
+ *
+ * Delete a user
+ */
+app.delete("/users/:userId", async (req, res) => {
+	const userId = Number(req.params.userId);
+
+	if (!userId) {
+		res.status(400).send({ message: "That is not a valid ID" });
+		return;
+	}
+
+	try {
+		await prisma.users.delete({
+			where: {
+				id: userId,
+			},
+		});
+		res.status(204).send();
         
 	} catch (err) {
 		console.error(err);
