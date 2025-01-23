@@ -1,10 +1,27 @@
 import express from "express";
 import prisma from "./prisma"; // importing the prisma instance we created
 import morgan from "morgan";
+import { PrismaClientInitializationError, PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
+
+//hantera prisma errors
+const handlePrismaError = (err: unknown) => {
+    if (err instanceof PrismaClientInitializationError) {
+		return { status: 500, message: "Error initializing connection to database" };
+
+	} else if (err instanceof PrismaClientKnownRequestError) {
+		if (err.code === "P2021") {
+			return { status: 500, message: "Database table does not exist" };
+
+		} else if (err.code === "P2025") {
+			return { status: 404, message: "Not Found" };
+		};
+	};
+	return { status: 500, message: "Something went wrong when querying the database" };
+};
 
 /**
  * GET /
@@ -47,7 +64,7 @@ app.get("/phones/:phoneId", async (req, res) => {
     };
 
     try {
-        const phone = await prisma.phones.findUnique({
+        const phone = await prisma.phones.findUniqueOrThrow({
             where: {
                 id: phoneId,
             }, 
@@ -56,16 +73,21 @@ app.get("/phones/:phoneId", async (req, res) => {
             },
         });
 
-        if (!phone) {
-			res.status(404).send({ message: "Phone Not Found" });
-			return;
-		};
+        //behövs ej pga hantera prisma error funktionen i toppen
+        // if (!phone) {
+		// 	res.status(404).send({ message: "Phone Not Found" });
+		// 	return;
+		// };
 
         res.send(phone);
 
     } catch (err) {
         console.log('error!');
-		res.status(500).send({ message: "Something went wrong when querying the database" });
+
+        //detta behövs ej pga hanterar prisma error funktionen i toppen
+		// res.status(500).send({ message: "Something went wrong when querying the database" });
+        const { status, message } = handlePrismaError(err);
+		res.status(status).send({ message });
     };
 
 });
@@ -104,7 +126,7 @@ app.get("/users/:userId", async (req, res) => {
     };
 
     try {
-        const user = await prisma.users.findUnique({
+        const user = await prisma.users.findUniqueOrThrow({
             where: {
                 id: userId,
             },
@@ -113,20 +135,25 @@ app.get("/users/:userId", async (req, res) => {
             },
         });
 
-        if(!user) {
-            res.status(404).send({
-                message: 'user not found',
-            });
-            return;
-        };
+        //behövs ej pga handleprismaerror funktion
+        // if(!user) {
+        //     res.status(404).send({
+        //         message: 'user not found',
+        //     });
+        //     return;
+        // };
 
         res.send(user);
-        
+
     } catch (err) {
         console.log(err);
-        res.status(500).send({
-            message: 'Something went wrong',
-        });
+
+        //behövs ej pga handleprismaerror funktion
+        // res.status(500).send({
+        //     message: 'Something went wrong',
+        // });
+        const { status, message } = handlePrismaError(err);
+		res.status(status).send({ message });
     };
 });
 
