@@ -1,7 +1,7 @@
 import express from "express";
 import prisma from "./prisma"; // importing the prisma instance we created
 import morgan from "morgan";
-import { PrismaClientInitializationError, PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaClientInitializationError, PrismaClientKnownRequestError, PrismaClientValidationError } from "@prisma/client/runtime/library";
 
 const app = express();
 app.use(express.json());
@@ -19,6 +19,10 @@ const handlePrismaError = (err: unknown) => {
 		} else if (err.code === "P2025") {
 			return { status: 404, message: "Not Found" };
 		};
+
+    } else if (err instanceof PrismaClientValidationError) {
+		return { status: 400, message: "Validation Error" };
+
 	};
 	return { status: 500, message: "Something went wrong when querying the database" };
 };
@@ -32,6 +36,10 @@ app.get("/", (req, res) => {
 	});
 });
 
+
+
+
+//          PHONES
 /**
  * GET /phones
  *
@@ -91,6 +99,31 @@ app.get("/phones/:phoneId", async (req, res) => {
     };
 
 });
+
+/**
+ * POST /phones
+ *
+ * Create a phone
+ */
+app.post("/phones", async (req, res) => {
+
+	try {
+		const phone = await prisma.phones.create({
+			data: req.body,
+		});
+		res.status(201).send(phone);
+
+	} catch (err) {
+		console.error(err);
+		const { status, message } = handlePrismaError(err);
+		res.status(status).send({ message });
+	}
+});
+
+
+
+
+//              USERS
 
 /**
  * GET /users
@@ -155,6 +188,26 @@ app.get("/users/:userId", async (req, res) => {
         const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
     };
+});
+
+/**
+ * POST /users
+ *
+ * Create a user
+ */
+app.post("/users", async (req, res) => {
+
+	try {
+		const user = await prisma.users.create({
+			data: req.body,
+		});
+		res.status(201).send(user);
+        
+	} catch (err) {
+		console.error(err);
+		const { status, message } = handlePrismaError(err);
+		res.status(status).send({ message });
+	}
 });
 
 export default app;
