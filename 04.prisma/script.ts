@@ -113,6 +113,17 @@ async function main() {
 		},
 	});
 	console.log("User with phone:", user_with_phone);
+
+
+    // (GET) Hämta ALLA users och deras phones (om de har någon)
+	const users_with_phones = await prisma.users.findMany({
+		include: {
+			phones: true,
+		},
+	});
+	// console.log("Users with phones:", phones_with_user);
+	console.log("Users with phones:");
+	console.dir(users_with_phones, { depth: Infinity });  // Output all ze levels!
 };
 
 main()
