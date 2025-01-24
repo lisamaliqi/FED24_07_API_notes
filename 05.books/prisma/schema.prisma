@@ -14,11 +14,12 @@ datasource db {
 model Author {
   id    Int    @id @default(autoincrement()) @db.UnsignedInt
   name  String
-  books Book[] //hänvisar till book tabellen, alltså skapar en n:n relation
+  books Book[] @relation("AuthorToBook")
 }
+
 model Book {
   id      Int      @id @default(autoincrement()) @db.UnsignedInt
   title   String
   pages   Int      @db.UnsignedInt
-  authors Author[] //hänvisar till author tabellen, alltså skapar en n:n relation
+  authors Author[] @relation("AuthorToBook")
 }
