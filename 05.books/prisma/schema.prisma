@@ -10,3 +10,13 @@ datasource db {
 //skapat två nya databaser, en heter author andra heter books
 //för att sedan skicka detta till sin databas (phpMyAdmin) måste man göra " $ npx prisma db push" i terminalen
 //om man vill hämta så skriver man " $ npx prisma db pull"
+//för att detta ska fungera så MÅSTE du stå i foldern prisma befinner sig i, alltså här måste du stå i 05.books och sen skriva npx prisma db push
+model Author {
+  id   Int    @id @default(autoincrement()) @db.UnsignedInt
+  name String
+}
+model Book {
+  id    Int    @id @default(autoincrement()) @db.UnsignedInt
+  title String
+  pages Int    @db.UnsignedInt
+}
