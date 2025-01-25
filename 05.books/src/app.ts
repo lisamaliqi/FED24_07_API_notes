@@ -116,15 +116,36 @@ app.post('/authors', async (req, res) => {
 
 
 
-
 /**
  * PATCH /authors/:authorId
  *
  * Update a author
  */
+app.patch('/authors/:authorId', async (req, res) => {
+    const authorId = Number(req.params.authorId);
 
+    if(!authorId) {
+        res.status(400).send({
+            message: 'Thats not a valid id, try again',
+        });
+        return; 
+    };
 
+    try {
+        const author = await prisma.author.update({
+            where: {
+                id: authorId,
+            },
+            data: req.body,
+        });
+        res.status(200).send(author);
 
+    } catch (err) {
+        console.log('error!', err);
+        const { status, message } = handlePrismaError(err);
+        res.status(status).send({ message });
+    }
+});
 
 
 /**
@@ -227,7 +248,32 @@ app.post('/books', async (req, res) => {
  *
  * Update a book
  */
+app.patch('/books/:bookId', async (req, res) => {
+    const bookId = Number(req.params.bookId);
 
+    if(!bookId){
+        console.log('error!');
+        res.status(404).send({
+            message: 'Id not found, try again',
+        });
+        return;
+    };
+
+    try {
+        const book = await prisma.book.update({
+            where: {
+                id: bookId,
+            },
+            data: req.body,
+        });
+        res.status(200).send(book);
+
+    } catch (err) {
+        console.log('error!!', err);
+        const { status, message } = handlePrismaError(err);
+        res.status(status).send({ message });
+    };
+});
 
 
 
