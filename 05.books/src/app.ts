@@ -100,7 +100,19 @@ app.get('/authors/:authorId', async (req, res) => {
  *
  * Create a author
  */
+app.post('/authors', async (req, res) => {
+    try {
+        const author = await prisma.author.create({
+            data: req.body,
+        });
+        res.status(201).send(author);
 
+    } catch (err) {
+        console.log('error!', err);
+        const { status, message } = handlePrismaError(err);
+        res.status(status).send({ message });
+    }
+});
 
 
 
@@ -120,6 +132,12 @@ app.get('/authors/:authorId', async (req, res) => {
  *
  * Delete a author
  */
+
+
+
+
+
+
 
 
 
@@ -187,7 +205,19 @@ app.get('/books/:bookId', async (req, res) => {
  *
  * Create a book
  */
+app.post('/books', async (req, res) => {
+    try {
+        const book = await prisma.book.create({
+            data: req.body,
+        });
+        res.status(201).send(book);
 
+    } catch (err) {
+        console.log('error!', err);
+        const { status, message } = handlePrismaError(err);
+        res.status(status).send({ message });
+    };
+});
 
 
 
