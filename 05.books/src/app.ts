@@ -329,6 +329,11 @@ app.delete('/books/:bookId', async (req, res) => {
 
 
 
+
+
+
+
+
 /**
  * POST /books/:bookId/authors
  *
@@ -363,6 +368,44 @@ app.post("/books/:bookId/authors", async (req, res) => {
 	}
 });
 
+
+
+/**
+ * DELETE /books/:bookId/authors/:authorId
+ *
+ * Unlink an author from a book
+ */
+app.delete("/books/:bookId/authors/:authorId", async (req, res) => {
+	const bookId = Number(req.params.bookId);
+	const authorId = Number(req.params.authorId);
+	if (!bookId || !authorId) {
+		res.status(400).send({ message: "That is not a valid ID" });
+		return;
+	}
+
+    try {
+		const book = await prisma.book.update({
+			where: {
+				id: bookId,
+			},
+			data: {
+				authors: {
+					disconnect: {
+						id: authorId,
+					},
+				},
+			},
+			include: {
+				authors: true,
+			},
+		});
+		res.status(200).send(book);
+	} catch (err) {
+		console.error(err);
+		const { status, message } = handlePrismaError(err);
+		res.status(status).send({ message });
+	}
+});
 
 
 /**
