@@ -153,9 +153,30 @@ app.patch('/authors/:authorId', async (req, res) => {
  *
  * Delete a author
  */
+app.delete('/authors/:authorId', async (req, res) => {
+    const authorId = Number(req.params.authorId);
 
+    if(!authorId) {
+        res.status(400).send({
+            message: 'Id not found, try another one',
+        });
+        return;
+    }
 
+    try {
+        const author = await prisma.author.delete({
+            where: {
+                id: authorId,
+            },
+        });
+        res.status(204).send();
 
+    } catch (err) {
+        console.log('error!', err);
+        const { status, message } = handlePrismaError(err)
+        res.status(status).send({ message });
+    }
+}); 
 
 
 
@@ -242,7 +263,6 @@ app.post('/books', async (req, res) => {
 
 
 
-
 /**
  * PATCH /books/:bookId
  *
@@ -277,13 +297,35 @@ app.patch('/books/:bookId', async (req, res) => {
 
 
 
-
 /**
  * DELETE /books/:bookId
  *
  * Delete a book
  */
+app.delete('/books/:bookId', async (req, res) => {
+    const bookId = Number(req.params.bookId);
 
+    if(!bookId) {
+        res.status(404).send({
+            message: 'Id not found, try another one',
+        });
+        return;
+    };
+
+    try {
+        const book = await prisma.book.delete({
+            where: {
+                id: bookId,
+            },
+        });
+        res.status(204).send();
+
+    } catch (err) {
+        console.log('error!', err);
+        const { status, message } = handlePrismaError(err);
+        res.status(status).send({ message });
+    }
+});
 
 
 
