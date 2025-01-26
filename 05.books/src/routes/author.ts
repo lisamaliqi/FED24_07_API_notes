@@ -1,6 +1,6 @@
 import express from "express";
 import prisma from "../prisma";
-import { handlePrismaError } from "../exceptons/prisma";
+import { handlePrismaError } from "../exceptions/prisma";
 // Create a new Author router
 const router = express.Router();
 
