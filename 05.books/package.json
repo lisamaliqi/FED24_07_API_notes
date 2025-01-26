@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.ts"
+    "dev": "cross-env DEBUG=prisma-books:* nodemon server.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,9 @@
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",
+    "@types/debug": "^4.1.12",
+    "cross-env": "^7.0.3",
+    "debug": "^4.4.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "morgan": "^1.10.0"

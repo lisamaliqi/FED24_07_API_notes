@@ -4,7 +4,10 @@
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import prisma from "../prisma";
+import Debug from "debug";
 
+// Create a new debug instance
+const debug = Debug("prisma-books:author_controller");
 
 /**
  * Get all authors
@@ -17,7 +20,7 @@ export const index = async (req: Request, res: Response) => {
 		res.send(authors);
 
 	} catch (err) {
-		console.error(err);
+		debug(err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
@@ -44,7 +47,7 @@ export const show = async (req: Request, res: Response) => {
 		res.send(author);
 
 	} catch (err) {
-		console.error(err);
+		debug(`Author with ID ${authorId} not found`);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
