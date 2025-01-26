@@ -12,15 +12,15 @@ datasource db {
 //om man vill hämta så skriver man " $ npx prisma db pull"
 //för att detta ska fungera så MÅSTE du stå i foldern prisma befinner sig i, alltså här måste du stå i 05.books och sen skriva npx prisma db push
 model Author {
-  id    Int    @id @default(autoincrement()) @db.UnsignedInt
-  name  String
-  books Book[] @relation("AuthorToBook")
+    id          Int    @id @default(autoincrement()) @db.UnsignedInt
+    name        String
+    birthyear   Int? @db.UnsignedInt
+    books       Book[] @relation("AuthorToBook")
 }
 
 model Book {
-  id      Int      @id @default(autoincrement()) @db.UnsignedInt
-  title   String
-  pages   Int      @db.UnsignedInt
-    isbn    String?
-  authors Author[] @relation("AuthorToBook")
+    id      Int      @id @default(autoincrement()) @db.UnsignedInt
+    title   String
+    pages   Int      @db.UnsignedInt
+    authors Author[] @relation("AuthorToBook")
 }
