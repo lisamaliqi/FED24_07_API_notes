@@ -22,5 +22,14 @@ model Book {
     id      Int      @id @default(autoincrement()) @db.UnsignedInt
     title   String
     pages   Int      @db.UnsignedInt
+    publisherId Int? @db.UnsignedInt
+
     authors Author[] @relation("AuthorToBook")
+    publisher Publisher? @relation(fields: [publisherId], references: [id])
+}
+
+model Publisher {
+    id      Int     @id @default(autoincrement()) @db.UnsignedInt
+    name    String  
+    books   Book[]
 }
