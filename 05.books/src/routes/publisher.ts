@@ -1,6 +1,7 @@
 import express from "express";
 import prisma from "../prisma";
 import { handlePrismaError } from "../exceptions/prisma";
+import { index } from "../controllers/publisher_controller";
 
 // Create a new Publisher router
 const router = express.Router();
@@ -10,16 +11,7 @@ const router = express.Router();
  *
  * Get all publishers
  */
-router.get("/", async (req, res) => {
-	try {
-		const publishers = await prisma.publisher.findMany();
-		res.send(publishers);
-
-	} catch (err) {
-		console.error(err);
-		res.status(500).send({ message: "Something went wrong when querying the database" });
-	}
-});
+router.get("/", index);
 
 /**
  * GET /publishers/:publisherId
