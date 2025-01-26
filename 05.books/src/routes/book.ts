@@ -10,7 +10,7 @@ const router = express.Router();
  *
  * Get all books
  */
-router.get('/books', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const books = await prisma.book.findMany();
         res.send(books);
@@ -29,7 +29,7 @@ router.get('/books', async (req, res) => {
  *
  * Get a single book 
  */
-router.get('/books/:bookId', async (req, res) => {
+router.get('/:bookId', async (req, res) => {
     const bookId = Number(req.params.bookId);
 
     if (!bookId) {
@@ -65,7 +65,7 @@ router.get('/books/:bookId', async (req, res) => {
  *
  * Create a book
  */
-router.post('/books', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const book = await prisma.book.create({
             data: req.body,
@@ -86,7 +86,7 @@ router.post('/books', async (req, res) => {
  *
  * Update a book
  */
-router.patch('/books/:bookId', async (req, res) => {
+router.patch('/:bookId', async (req, res) => {
     const bookId = Number(req.params.bookId);
 
     if(!bookId){
@@ -120,7 +120,7 @@ router.patch('/books/:bookId', async (req, res) => {
  *
  * Delete a book
  */
-router.delete('/books/:bookId', async (req, res) => {
+router.delete('/:bookId', async (req, res) => {
     const bookId = Number(req.params.bookId);
 
     if(!bookId) {
@@ -157,7 +157,7 @@ router.delete('/books/:bookId', async (req, res) => {
  *
  * Link book to author(s)
  */
-router.post("/books/:bookId/authors", async (req, res) => {
+router.post("/:bookId/authors", async (req, res) => {
     const bookId = Number(req.params.bookId);
     if (!bookId) {
         res.status(400).send({ message: "That is not a valid ID" });
@@ -193,7 +193,7 @@ router.post("/books/:bookId/authors", async (req, res) => {
  *
  * Unlink an author from a book
  */
-router.delete("/books/:bookId/authors/:authorId", async (req, res) => {
+router.delete("/:bookId/authors/:authorId", async (req, res) => {
     const bookId = Number(req.params.bookId);
     const authorId = Number(req.params.authorId);
     if (!bookId || !authorId) {

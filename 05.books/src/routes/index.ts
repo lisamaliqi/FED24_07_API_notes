@@ -22,14 +22,16 @@ router.get("/", (req, res) => {
 
 //flytta alla get, post, patch och delete till author.ts i src/routes för att göra sidan fin 
 //      Author routes
-router.use(authorRouter);
+//skriver /authors i början så jag slipper ha det i books, kan ta bort första /authors i mina get, post, patch, del osv
+router.use("/authors", authorRouter);
 
 
 
 
 //flytta alla get, post, patch och delete till book.ts i src/routes för att göra sidan fin 
 //      Book routes
-router.use(bookRouter);
+//skriver /books i början så jag slipper ha det i books, kan ta bort första /books i mina get, post, patch, del osv
+router.use("/books", bookRouter);
 
 
 
