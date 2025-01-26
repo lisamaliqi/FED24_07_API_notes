@@ -1,6 +1,7 @@
 import express from "express";
 import authorRouter from "./author";
 import bookRouter from "./book";
+import publisherRouter from "./publisher";
 
 
 // Create a new Root router
@@ -34,6 +35,10 @@ router.use("/authors", authorRouter);
 router.use("/books", bookRouter);
 
 
+
+
+//      Publisher routes
+router.use('/publishers', publisherRouter)
 
 
 
