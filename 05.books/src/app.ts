@@ -1,6 +1,7 @@
 import express from "express";
 import prisma from "./prisma"; // importing the prisma instance we created
 import morgan from "morgan";
+import authorRouter from "./routes/author";
 import { stat } from "fs";
 import { error } from "console";
 
@@ -19,144 +20,9 @@ app.get("/", (req, res) => {
 	});
 });
 
-//          AUTHORS
-/**
- * GET /authors
- *
- * Get all authors
- */
-app.get('/authors', async (req, res) => {
-    try {
-        const authors = await prisma.author.findMany();
-        res.send(authors);
-
-    } catch (err) {
-        console.log('error!', err);
-        const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
-    };
-});
-
-
-
-/**
- * GET /authors/:authorId
- *
- * Get a single author 
- */
-app.get('/authors/:authorId', async (req, res) => {
-    const authorId = Number(req.params.authorId);
-
-    if (!authorId) {
-        console.log('error!');
-        res.status(404).send({ 
-            message: 'Id not found, try another one!',
-        });
-        return;
-    };
-
-    try {
-        const author = await prisma.author.findUniqueOrThrow({
-            where: {
-                id: authorId,
-            }, 
-            include: {
-                books: true,
-            },
-        });
-        res.send(author);
-
-    } catch (err){
-        console.log('error!', err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    };
-});
-
-
-
-/**
- * POST /authors
- *
- * Create a author
- */
-app.post('/authors', async (req, res) => {
-    try {
-        const author = await prisma.author.create({
-            data: req.body,
-        });
-        res.status(201).send(author);
-
-    } catch (err) {
-        console.log('error!', err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    }
-});
-
-
-
-/**
- * PATCH /authors/:authorId
- *
- * Update a author
- */
-app.patch('/authors/:authorId', async (req, res) => {
-    const authorId = Number(req.params.authorId);
-
-    if(!authorId) {
-        res.status(400).send({
-            message: 'Thats not a valid id, try again',
-        });
-        return; 
-    };
-
-    try {
-        const author = await prisma.author.update({
-            where: {
-                id: authorId,
-            },
-            data: req.body,
-        });
-        res.status(200).send(author);
-
-    } catch (err) {
-        console.log('error!', err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    }
-});
-
-
-/**
- * DELETE /authors/:authorId
- *
- * Delete a author
- */
-app.delete('/authors/:authorId', async (req, res) => {
-    const authorId = Number(req.params.authorId);
-
-    if(!authorId) {
-        res.status(400).send({
-            message: 'Id not found, try another one',
-        });
-        return;
-    }
-
-    try {
-        const author = await prisma.author.delete({
-            where: {
-                id: authorId,
-            },
-        });
-        res.status(204).send();
-
-    } catch (err) {
-        console.log('error!', err);
-        const { status, message } = handlePrismaError(err)
-        res.status(status).send({ message });
-    }
-}); 
+//flytta alla get, post, patch och delete till author.ts i src/routes för att göra sidan fin 
+//      Author routes
+app.use(authorRouter);
 
 
 
