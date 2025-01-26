@@ -1,6 +1,5 @@
 import express from "express";
-import prisma from "../prisma";
-import { handlePrismaError } from "../exceptions/prisma";
+import { index, show, store, update, destroy, addAuthor, removeAuthor } from "../controllers/book_controller";
 // Create a new Book router
 const router = express.Router();
 
@@ -10,17 +9,7 @@ const router = express.Router();
  *
  * Get all books
  */
-router.get('/', async (req, res) => {
-    try {
-        const books = await prisma.book.findMany();
-        res.send(books);
-
-    } catch (err) {
-        console.log(err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    }
-});
+router.get('/', index);
 
 
 
@@ -29,35 +18,7 @@ router.get('/', async (req, res) => {
  *
  * Get a single book 
  */
-router.get('/:bookId', async (req, res) => {
-    const bookId = Number(req.params.bookId);
-
-    if (!bookId) {
-        console.log('erro!');
-        res.status(404).send({
-            message: 'That id is not valid, try a new one',
-        });
-        return;
-    };
-
-    try {
-        const book = await prisma.book.findUniqueOrThrow({
-            where: {
-                id: bookId,
-            }, 
-            include: {
-                authors: true,
-                publisher: true,
-            },
-        });
-        res.send(book);
-
-    } catch (err) {
-        console.log('error!', err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    }
-});
+router.get('/:bookId', show);
 
 
 
@@ -66,19 +27,7 @@ router.get('/:bookId', async (req, res) => {
  *
  * Create a book
  */
-router.post('/', async (req, res) => {
-    try {
-        const book = await prisma.book.create({
-            data: req.body,
-        });
-        res.status(201).send(book);
-
-    } catch (err) {
-        console.log('error!', err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    };
-});
+router.post('/', store);
 
 
 
@@ -87,32 +36,7 @@ router.post('/', async (req, res) => {
  *
  * Update a book
  */
-router.patch('/:bookId', async (req, res) => {
-    const bookId = Number(req.params.bookId);
-
-    if(!bookId){
-        console.log('error!');
-        res.status(404).send({
-            message: 'Id not found, try again',
-        });
-        return;
-    };
-
-    try {
-        const book = await prisma.book.update({
-            where: {
-                id: bookId,
-            },
-            data: req.body,
-        });
-        res.status(200).send(book);
-
-    } catch (err) {
-        console.log('error!!', err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    };
-});
+router.patch('/:bookId', update);
 
 
 
@@ -121,30 +45,7 @@ router.patch('/:bookId', async (req, res) => {
  *
  * Delete a book
  */
-router.delete('/:bookId', async (req, res) => {
-    const bookId = Number(req.params.bookId);
-
-    if(!bookId) {
-        res.status(404).send({
-            message: 'Id not found, try another one',
-        });
-        return;
-    };
-
-    try {
-        const book = await prisma.book.delete({
-            where: {
-                id: bookId,
-            },
-        });
-        res.status(204).send();
-
-    } catch (err) {
-        console.log('error!', err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    }
-});
+router.delete('/:bookId', destroy);
 
 
 
@@ -158,34 +59,7 @@ router.delete('/:bookId', async (req, res) => {
  *
  * Link book to author(s)
  */
-router.post("/:bookId/authors", async (req, res) => {
-    const bookId = Number(req.params.bookId);
-    if (!bookId) {
-        res.status(400).send({ message: "That is not a valid ID" });
-        return;
-    }
-
-    try {
-        const book = await prisma.book.update({
-            where: {
-                id: bookId,
-            },
-            data: {
-                authors: {
-                    connect: req.body,  // { "id": 8 }
-                },
-            },
-            include: {
-                authors: true,
-            },
-        });
-        res.status(201).send(book);
-    } catch (err) {
-        console.error(err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    }
-});
+router.post("/:bookId/authors", addAuthor);
 
 
 
@@ -194,36 +68,6 @@ router.post("/:bookId/authors", async (req, res) => {
  *
  * Unlink an author from a book
  */
-router.delete("/:bookId/authors/:authorId", async (req, res) => {
-    const bookId = Number(req.params.bookId);
-    const authorId = Number(req.params.authorId);
-    if (!bookId || !authorId) {
-        res.status(400).send({ message: "That is not a valid ID" });
-        return;
-    }
-
-    try {
-        const book = await prisma.book.update({
-            where: {
-                id: bookId,
-            },
-            data: {
-                authors: {
-                    disconnect: {
-                        id: authorId,
-                    },
-                },
-            },
-            include: {
-                authors: true,
-            },
-        });
-        res.status(200).send(book);
-    } catch (err) {
-        console.error(err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ message });
-    }
-});
+router.delete("/:bookId/authors/:authorId", removeAuthor);
 
 export default router;
