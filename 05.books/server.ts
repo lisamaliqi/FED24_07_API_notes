@@ -3,12 +3,16 @@
 import app from "./src/app";
 import http from "http";
 import * as dotenv from "dotenv";
+import Debug from "debug";
 
 // Initiera vår dotenv så den läser vår .env fil
 dotenv.config();
 
 // Läs PORT så den startar från env filen alternativt default på 3000
 const PORT = process.env.PORT || 3000;
+
+// Create a new debug instance
+const debug = Debug("prisma-books:server");
 
 /**
  * Create HTTP server.
@@ -31,13 +35,16 @@ server.on("error", (err: NodeJS.ErrnoException) => {
 	switch (err.code) {
 		case "EACCES":
 			console.error(`🦸🏻 Port ${PORT} requires elevated privileges`);
+            debug(`🦸🏻 Port ${PORT} requires elevated privileges: %O`, err);
 			process.exit(1);
 			break;
 		case "EADDRINUSE":
 			console.error(`🛑 Port ${PORT} is already in use`);
+            debug(`🛑 Port ${PORT} is already in use: %O`, err);
 			process.exit(1);
 			break;
 		default:
+            debug(`🚨 Unknown error, rethrowing: %O`, err);
 			throw err;
 	}
 });
