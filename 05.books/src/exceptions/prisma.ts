@@ -1,22 +1,49 @@
 import { PrismaClientInitializationError, PrismaClientKnownRequestError, PrismaClientValidationError } from "@prisma/client/runtime/library";
 
+interface PrismaErrorResponse {
+    status_code: number;
+	body: {
+        status: "error" | "fail";
+		message?: string;
+		data?: {
+            message: string;
+		}
+	}
+}
+
+
 //funktion som hanterar errors så man slipper skriva error-kod för varje request
-export const handlePrismaError = (err: unknown) => {
+export const handlePrismaError = (err: unknown): PrismaErrorResponse => {
     if (err instanceof PrismaClientInitializationError) {
-        return { status: 500, message: "Error initializing connection to database" };
+        return {
+			status_code: 500,
+			body: { status: "error", message: "Error initializing connection to database" },
+		}
 
     } else if (err instanceof PrismaClientKnownRequestError) {
         if (err.code === "P2021") {
-            return { status: 500, message: "Database table does not exist" };
+            return {
+				status_code: 500,
+				body: { status: "error", message: "Database table does not exist" },
+			}
 
         } else if (err.code === "P2025") {
-            return { status: 404, message: "Not Found" };
+            return {
+				status_code: 404,
+				body: { status: "fail", data: { message: "Not Found" }}
+			}
         }
 
     } else if (err instanceof PrismaClientValidationError) {
-        return { status: 400, message: "Validation Error" };
+        return {
+			status_code: 400,
+			body: { status: "fail", data: { message: "Validation Error" }}
+		}
 
     }
 
-    return { status: 500, message: "Something went wrong when querying the database" };
+    return {
+		status_code: 500,
+		body: { status: "error", message: "Something went wrong when querying the database" }
+	}
 }
