@@ -17,12 +17,12 @@ const debug = Debug("prisma-books:publisher_controller");
 export const index = async (req: Request, res: Response) => {
 	try {
 		const publishers = await prisma.publisher.findMany();
-		res.send(publishers);
+		res.send({ status: "success", data: publishers });
 
 	} catch (err) {
 		debug("Error when trying to query for all Publishers: %O", err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	};
 };
 
@@ -43,12 +43,12 @@ export const show = async (req: Request, res: Response) => {
 				books: true,
 			},
 		});
-		res.send(publisher);
+		res.send({ status: "success", data: publisher });
 
 	} catch (err) {
 		debug("Error when trying to query for Publisher #%d: %O", publisherId, err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	}
 };
 
@@ -62,12 +62,12 @@ export const store = async (req: Request, res: Response) => {
 		const publisher = await prisma.publisher.create({
 			data: req.body,
 		});
-		res.status(201).send(publisher);
+		res.status(201).send({ status: "success", data: publisher });
 
 	} catch (err) {
 		debug("Error when trying to create a Publisher: %O", err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	}
 };
 
@@ -90,12 +90,12 @@ export const update = async (req: Request, res: Response) => {
 			},
 			data: req.body,
 		});
-		res.status(200).send(publisher);
+		res.send({ status: "success", data: publisher });
 
 	} catch (err) {
 		debug("Error when trying to update Publisher #%d: %O", publisherId, err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	}
 };
 
@@ -122,6 +122,6 @@ export const destroy = async (req: Request, res: Response) => {
 	} catch (err) {
 		debug("Error when trying to delete Publisher #%d: %O", publisherId, err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	}
 };
