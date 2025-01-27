@@ -4,6 +4,10 @@
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import prisma from "../prisma";
+import Debug from "debug";
+
+// Create a new debug instance
+const debug = Debug("prisma-books:publisher_controller");
 
 /**
  * Get all publishers
@@ -16,7 +20,7 @@ export const index = async (req: Request, res: Response) => {
 		res.send(publishers);
 
 	} catch (err) {
-		console.error(err);
+		debug("Error when trying to query for all Publishers: %O", err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	};
@@ -42,7 +46,7 @@ export const show = async (req: Request, res: Response) => {
 		res.send(publisher);
 
 	} catch (err) {
-		console.error(err);
+		debug("Error when trying to query for Publisher #%d: %O", publisherId, err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
@@ -61,7 +65,7 @@ export const store = async (req: Request, res: Response) => {
 		res.status(201).send(publisher);
 
 	} catch (err) {
-		console.error(err);
+		debug("Error when trying to create a Publisher: %O", err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
@@ -89,7 +93,7 @@ export const update = async (req: Request, res: Response) => {
 		res.status(200).send(publisher);
 
 	} catch (err) {
-		console.error(err);
+		debug("Error when trying to update Publisher #%d: %O", publisherId, err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
@@ -116,7 +120,7 @@ export const destroy = async (req: Request, res: Response) => {
 		res.status(204).send();
 
 	} catch (err) {
-		console.error(err);
+		debug("Error when trying to delete Publisher #%d: %O", publisherId, err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
