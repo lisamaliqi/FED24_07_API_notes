@@ -18,12 +18,12 @@ const debug = Debug("prisma-books:author_controller");
 export const index = async (req: Request, res: Response) => {
 	try {
 		const authors = await prisma.author.findMany();
-		res.send(authors);
+		res.send({ status: "success", data: authors });
 
 	} catch (err) {
 		debug("Error when trying to query for all Authors: %O", err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	}
 }
 
@@ -45,12 +45,12 @@ export const show = async (req: Request, res: Response) => {
 				books: true,
 			},
 		});
-		res.send(author);
+		res.send({ status: "success", data: author });
 
 	} catch (err) {
 		debug("Error when trying to query for Author #%d: %O", authorId, err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	}
 }
 
@@ -76,12 +76,12 @@ export const store = async (req: Request, res: Response) => {
 		const author = await prisma.author.create({
 			data: req.body,
 		});
-		res.status(201).send(author);
+		res.status(201).send({ status: "success", data: author });
 
 	} catch (err) {
 		debug("Error when trying to create a Author: %O", err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	}
 }
 
@@ -105,12 +105,12 @@ export const update = async (req: Request, res: Response) => {
 			},
 			data: req.body,
 		});
-		res.status(200).send(author);
+		res.send({ status: "success", data: author });
 
 	} catch (err) {
 		debug("Error when trying to update Author #%d: %O", authorId, err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	}
 }
 
@@ -138,6 +138,6 @@ export const destroy = async (req: Request, res: Response) => {
 	} catch (err) {
 		debug("Error when trying to delete Author #%d: %O", authorId, err);
 		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ message });
+		res.status(status).send({ status: "error", message });
 	}
 }
