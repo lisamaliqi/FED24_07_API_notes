@@ -103,6 +103,17 @@ export const update = async (req: Request, res: Response) => {
 		return;
 	}
 
+    // Check for any validation errors
+	const validationErrors = validationResult(req);
+	if (!validationErrors.isEmpty()) {
+		console.log("validationErrors:", validationErrors);
+		res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		});
+		return;
+	}
+
 	try {
 		const author = await prisma.author.update({
 			where: {
