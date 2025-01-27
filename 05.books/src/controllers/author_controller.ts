@@ -20,7 +20,7 @@ export const index = async (req: Request, res: Response) => {
 		res.send(authors);
 
 	} catch (err) {
-		debug(err);
+		debug("Error when trying to query for all Authors: %O", err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
@@ -47,7 +47,7 @@ export const show = async (req: Request, res: Response) => {
 		res.send(author);
 
 	} catch (err) {
-		debug(`Author with ID ${authorId} not found`);
+		debug("Error when trying to query for Author #%d: %O", authorId, err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
@@ -67,7 +67,7 @@ export const store = async (req: Request, res: Response) => {
 		res.status(201).send(author);
 
 	} catch (err) {
-		console.error(err);
+		debug("Error when trying to create a Author: %O", err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
@@ -96,7 +96,7 @@ export const update = async (req: Request, res: Response) => {
 		res.status(200).send(author);
 
 	} catch (err) {
-		console.error(err);
+		debug("Error when trying to update Author #%d: %O", authorId, err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
@@ -124,7 +124,7 @@ export const destroy = async (req: Request, res: Response) => {
 		res.status(204).send();
 
 	} catch (err) {
-		console.error(err);
+		debug("Error when trying to delete Author #%d: %O", authorId, err);
 		const { status, message } = handlePrismaError(err);
 		res.status(status).send({ message });
 	}
