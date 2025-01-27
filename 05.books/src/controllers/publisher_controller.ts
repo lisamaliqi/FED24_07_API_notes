@@ -21,8 +21,8 @@ export const index = async (req: Request, res: Response) => {
 
 	} catch (err) {
 		debug("Error when trying to query for all Publishers: %O", err);
-		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ status: "error", message });
+		const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
 	};
 };
 
@@ -52,8 +52,8 @@ export const show = async (req: Request, res: Response) => {
 
 	} catch (err) {
 		debug("Error when trying to query for Publisher #%d: %O", publisherId, err);
-		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ status: "error", message });
+		const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
 	}
 };
 
@@ -71,8 +71,8 @@ export const store = async (req: Request, res: Response) => {
 
 	} catch (err) {
 		debug("Error when trying to create a Publisher: %O", err);
-		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ status: "error", message });
+		const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
 	}
 };
 
@@ -99,8 +99,8 @@ export const update = async (req: Request, res: Response) => {
 
 	} catch (err) {
 		debug("Error when trying to update Publisher #%d: %O", publisherId, err);
-		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ status: "error", message });
+		const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
 	}
 };
 
@@ -126,7 +126,7 @@ export const destroy = async (req: Request, res: Response) => {
 
 	} catch (err) {
 		debug("Error when trying to delete Publisher #%d: %O", publisherId, err);
-		const { status, message } = handlePrismaError(err);
-		res.status(status).send({ status: "error", message });
+		const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
 	}
 };

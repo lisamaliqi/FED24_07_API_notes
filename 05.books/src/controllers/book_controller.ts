@@ -21,8 +21,8 @@ export const index = async (req: Request, res: Response) => {
 
     } catch (err) {
         debug("Error when trying to query for all Books: %O", err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ status: "error", message });
+        const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
     }
 };
 
@@ -63,8 +63,8 @@ export const show = async (req: Request, res: Response) => {
 
     } catch (err) {
         debug("Error when trying to query for Book #%d: %O", bookId, err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ status: "error", message });
+        const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
     }
 };
 
@@ -84,8 +84,8 @@ export const store = async (req: Request, res: Response) => {
 
     } catch (err) {
         debug("Error when trying to create a Book: %O", err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ status: "error", message });
+        const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
     };
 };
 
@@ -116,8 +116,8 @@ export const update = async (req: Request, res: Response) => {
 
     } catch (err) {
         debug("Error when trying to update Book #%d: %O", bookId, err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ status: "error", message });
+        const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
     };
 };
 
@@ -146,8 +146,8 @@ export const destroy = async (req: Request, res: Response) => {
 
     } catch (err) {
         debug("Error when trying to delete Book #%d: %O", bookId, err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ status: "error", message });
+        const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
     }
 };
 
@@ -188,8 +188,8 @@ export const addAuthor = async (req: Request, res: Response) => {
 
     } catch (err) {
         debug("Error when trying to add Author %j to Book #%d: %O", req.body, bookId, err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ status: "error", message });
+        const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
     }
 };
 
@@ -228,7 +228,7 @@ export const removeAuthor = async (req: Request, res: Response) => {
 
     } catch (err) {
         debug("Error when trying to remove Author #%d from Book #%d: %O", authorId, bookId, err);
-        const { status, message } = handlePrismaError(err);
-        res.status(status).send({ status: "error", message });
+        const { status_code, body } = handlePrismaError(err);
+		res.status(status_code).send(body);
     }
 };
