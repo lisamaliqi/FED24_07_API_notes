@@ -15,7 +15,10 @@ const router = express.Router();
  */
 router.get("/", (req, res) => {
 	res.send({
-		message: "I AM API, BEEP BOOP folder 5!",
+		status: "success",
+		data: {
+			message: "I AM BOOK API, LOREM IPSUM",
+		}
 	});
 });
 
@@ -48,7 +51,10 @@ router.use('/publishers', publisherRouter)
 router.use((req, res) => {
 	// Respond with 404 and a message in JSON-format
 	res.status(404).send({
-		message: `Cannot ${req.method} ${req.path}`,
+		status: "fail",
+		data: {
+			message: `Cannot ${req.method} ${req.path}`,
+		}
 	});
 });
 

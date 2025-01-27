@@ -34,6 +34,11 @@ export const index = async (req: Request, res: Response) => {
 export const show = async (req: Request, res: Response) => {
 	const publisherId = Number(req.params.publisherId);
 
+    if (!publisherId) {
+		res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
+		return;
+	}
+
 	try {
 		const publisher = await prisma.publisher.findUniqueOrThrow({
 			where: {
@@ -79,7 +84,7 @@ export const store = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
 	const publisherId = Number(req.params.publisherId);
 	if (!publisherId) {
-		res.status(400).send({ message: "That is not a valid ID" });
+		res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
 		return;
 	}
 
@@ -107,7 +112,7 @@ export const update = async (req: Request, res: Response) => {
 export const destroy = async (req: Request, res: Response) => {
 	const publisherId = Number(req.params.publisherId);
 	if (!publisherId) {
-		res.status(400).send({ message: "That is not a valid ID" });
+		res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
 		return;
 	}
 

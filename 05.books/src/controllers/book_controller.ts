@@ -37,6 +37,11 @@ export const show = async (req: Request, res: Response) => {
     const bookId = Number(req.params.bookId);
 
     if (!bookId) {
+		res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
+		return;
+	}
+
+    if (!bookId) {
         console.log('erro!');
         res.status(404).send({
             message: 'That id is not valid, try a new one',
@@ -96,9 +101,7 @@ export const update = async (req: Request, res: Response) => {
 
     if(!bookId){
         console.log('error!');
-        res.status(404).send({
-            message: 'Id not found, try again',
-        });
+        res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
         return;
     };
 
@@ -129,9 +132,7 @@ export const destroy = async (req: Request, res: Response) => {
     const bookId = Number(req.params.bookId);
 
     if(!bookId) {
-        res.status(404).send({
-            message: 'Id not found, try another one',
-        });
+        res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
         return;
     };
 
@@ -165,7 +166,7 @@ export const destroy = async (req: Request, res: Response) => {
 export const addAuthor = async (req: Request, res: Response) => {
     const bookId = Number(req.params.bookId);
     if (!bookId) {
-        res.status(400).send({ message: "That is not a valid ID" });
+        res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
         return;
     }
 
@@ -184,7 +185,7 @@ export const addAuthor = async (req: Request, res: Response) => {
             },
         });
         res.status(201).send({ status: "success", data: book });
-        
+
     } catch (err) {
         debug("Error when trying to add Author %j to Book #%d: %O", req.body, bookId, err);
         const { status, message } = handlePrismaError(err);
@@ -203,7 +204,7 @@ export const removeAuthor = async (req: Request, res: Response) => {
     const bookId = Number(req.params.bookId);
     const authorId = Number(req.params.authorId);
     if (!bookId || !authorId) {
-        res.status(400).send({ message: "That is not a valid ID" });
+        res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
         return;
     }
 
