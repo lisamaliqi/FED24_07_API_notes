@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import prisma from "../prisma";
 import Debug from "debug";
+import { validationResult } from "express-validator";
 
 // Create a new debug instance
 const debug = Debug("prisma-books:author_controller");
@@ -60,7 +61,18 @@ export const show = async (req: Request, res: Response) => {
  * POST /authors
  */
 export const store = async (req: Request, res: Response) => {
-	try {
+	// Check for any validation errors
+	const validationErrors = validationResult(req);
+	if (!validationErrors.isEmpty()) {
+		console.log("validationErrors:", validationErrors);
+		res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		});
+		return;
+	};
+
+    try {
 		const author = await prisma.author.create({
 			data: req.body,
 		});
