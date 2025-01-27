@@ -12,7 +12,7 @@ interface PrismaErrorResponse {
 }
 
 
-//funktion som hanterar errors så man slipper skriva error-kod för varje request
+//funktion som hanterar errors så man slipper skriva error-kod för varje request, ops..
 export const handlePrismaError = (err: unknown): PrismaErrorResponse => {
     if (err instanceof PrismaClientInitializationError) {
         return {
