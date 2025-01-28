@@ -1,6 +1,7 @@
 import express from "express";
 import authorRouter from "./author";
 import bookRouter from "./book";
+import profileRouter from "./profile";
 import publisherRouter from "./publisher";
 import { register} from "../controllers/register_controller"
 import { createUserRules } from "../validations/user_rules";
@@ -39,6 +40,9 @@ router.use("/authors", authorRouter);
 //skriver /books i början så jag slipper ha det i books, kan ta bort första /books i mina get, post, patch, del osv
 router.use("/books", bookRouter);
 
+
+//      Profile router
+router.use('/profile', profileRouter);
 
 
 
