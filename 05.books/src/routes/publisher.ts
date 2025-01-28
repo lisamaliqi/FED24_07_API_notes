@@ -3,6 +3,7 @@ import prisma from "../prisma";
 import { handlePrismaError } from "../exceptions/prisma";
 import { destroy, index, show, store, update, linkToBook, unlinkFromBook } from "../controllers/publisher_controller";
 import { describe } from "node:test";
+import { createPublisherRules, updatePublisherRules } from "../validations/publisher_rules";
 
 // Create a new Publisher router
 const router = express.Router();
@@ -26,14 +27,14 @@ router.get("/:publisherId", show);
  *
  * Create a publisher
  */
-router.post("/", store);
+router.post("/", createPublisherRules, store);
 
 /**
  * PATCH /publishers/:publisherId
  *
  * Update a publisher
  */
-router.patch("/:publisherId", update);
+router.patch("/:publisherId", updatePublisherRules, update);
 
 /**
  * DELETE /publishers/:publisherId
