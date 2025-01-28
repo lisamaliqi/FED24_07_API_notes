@@ -3,6 +3,7 @@ import authorRouter from "./author";
 import bookRouter from "./book";
 import publisherRouter from "./publisher";
 import { register} from "../controllers/register_controller"
+import { body } from "express-validator";
 
 
 // Create a new Root router
@@ -52,7 +53,23 @@ router.use('/publishers', publisherRouter)
  * POST /register
  */
 
-router.post('/register', register);
+router.post('/register', [
+    //name string, trimmed + between 3-191 chars
+    body("name")
+        .optional()
+        .isString().withMessage('name has to be a string').bail()
+        .trim().isLength({ min: 3, max: 191 }).withMessage('name has to be 3-191 chars'),
+
+    //email required, string,  valid email unique
+    body('email')
+        .trim().isEmail().withMessage('email has to be a valid email'),
+
+    //password required, string,  at least 6 chars
+    body('password')
+        .isString().withMessage('password has to be a string')
+        .isLength({ min: 6 }).withMessage('password has to be at least 6 chars'),
+        
+], register);
 
 /**
  * Catch-all route handler
