@@ -1,9 +1,12 @@
 /**
  * Register Controller
  */
+import Debug from "debug";
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import prisma from "../prisma";
+import { matchedData, validationResult } from "express-validator";
+import { debug, log } from "node:console";
 
 /**
  * Register a new user
@@ -14,7 +17,21 @@ import prisma from "../prisma";
  */
 export const register = async (req: Request, res: Response) => {
     //validera inkommande data
+    const validationErrors = validationResult(req);
+    if(!validationErrors.isEmpty()) {
+        res.status(400).send({
+            status: 'fail',
+            data: validationErrors.array(),
+        });
+        return;
+    };
 
+    //få endast validerade datan från requesten 
+    const validateData = matchedData(req);
+    debug('req.body: ', req.body); //visar allt du skriver i din postman (ex ink också id)
+    debug('validatedData: ', validateData); //visar bara det man validerar i din postman (ex ink INTE id pga validerar ej i index.ts)
+
+    
 
     //kalkylera hash + salt för lösenordet 
 
