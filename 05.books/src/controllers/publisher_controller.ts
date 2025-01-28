@@ -130,3 +130,72 @@ export const destroy = async (req: Request, res: Response) => {
 		res.status(status_code).send(body);
 	}
 };
+
+
+
+
+
+
+// ROUTE: LINK / CONNECT A PUBLISHER TO A BOOK
+export const linkToBook = async (req: Request, res: Response) => {
+    const publisherID = Number(req.params.publisherId);
+  
+    if (!publisherID) {
+      res.status(400).send({
+        status: "fail",
+        message: "This is not a valid ID",
+      });
+      return;
+    }
+  
+    try {
+      const publisher = await prisma.publisher.update({
+        where: { id: publisherID },
+        data: {
+          books: {
+            connect: req.body,
+          },
+        },
+        include: {
+          books: true,
+        },
+      });
+      res.status(201).send({
+        status: "success",
+        publisher,
+      });
+    } catch (err) {
+      console.error(err);
+      const { status_code, body } = handlePrismaError(err);
+      res.status(status_code).send(body);
+    }
+  };
+  
+  // ROUTE: UNLINK / DISCONNECT A PUBLISHER FROM A BOOK
+  export const unlinkFromBook = async (req: Request, res: Response) => {
+    const publisherID = Number(req.params.publisherId);
+    const bookID = Number(req.params.bookId);
+  
+    if (!publisherID || !bookID) {
+      res.status(400).send({ message: "That is not a valid ID" });
+      return;
+    }
+  
+    try {
+      const publisher = await prisma.publisher.update({
+        where: { id: publisherID },
+        data: {
+          books: {
+            disconnect: { id: bookID },
+          },
+        },
+        include: { books: true },
+      });
+  
+      res.status(200).send(publisher);
+    } catch (error) {
+      console.error(error);
+      const { status_code, body } = handlePrismaError(error);
+      res.status(status_code).send(body);
+    }
+  };

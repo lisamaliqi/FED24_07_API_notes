@@ -1,7 +1,7 @@
 import express from "express";
 import prisma from "../prisma";
 import { handlePrismaError } from "../exceptions/prisma";
-import { destroy, index, show, store, update } from "../controllers/publisher_controller";
+import { destroy, index, show, store, update, linkToBook, unlinkFromBook } from "../controllers/publisher_controller";
 import { describe } from "node:test";
 
 // Create a new Publisher router
@@ -41,5 +41,26 @@ router.patch("/:publisherId", update);
  * Delete a publisher
  */
 router.delete("/:publisherId", destroy);
+
+
+
+
+/**
+ * POST /publishers/:publisherId
+ *
+ * Update a publisher
+ */
+router.post("/:publisherId/book", linkToBook);
+
+/**
+ * DELETE /publishers/:publisherId
+ *
+ * Delete a publisher
+ */
+router.delete("/:publisherId/book/:bookId", unlinkFromBook);
+
+
+
+
 
 export default router;
