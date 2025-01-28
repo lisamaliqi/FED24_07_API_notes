@@ -2,6 +2,7 @@ import express from "express";
 import authorRouter from "./author";
 import bookRouter from "./book";
 import publisherRouter from "./publisher";
+import { register} from "../controllers/register_controller"
 
 
 // Create a new Root router
@@ -44,6 +45,14 @@ router.use("/books", bookRouter);
 router.use('/publishers', publisherRouter)
 
 
+
+/**
+ * Register a new user
+ * 
+ * POST /register
+ */
+
+router.post('/register', register);
 
 /**
  * Catch-all route handler
