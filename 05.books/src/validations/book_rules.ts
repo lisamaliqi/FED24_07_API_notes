@@ -12,7 +12,7 @@ export const createBookRules = [
 		.isInt({ min: 1 }).withMessage("has to be a positive integer"),
 
 	body("publisherId")
-		.optional()
+		// .optional()
 		.isInt({ min: 1 }).withMessage("has to be a positive integer"),
 ];
 
@@ -27,6 +27,6 @@ export const updateBookRules = [
 		.isInt({ min: 1 }).withMessage("has to be a positive integer"),
 
 	body("publisherId")
-		.optional()
+		// .optional()
 		.isInt({ min: 1 }).withMessage("has to be a positive integer"),
 ];
