@@ -3,10 +3,10 @@
  */
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
-import prisma from "../prisma";
 import Debug from "debug";
 import { matchedData, validationResult } from "express-validator";
 import { CreateAuthorData, UpdateAuthorData } from "../types/Author.types";
+import { createAuthor, deleteAuthor, getAuthor, getAuthors, updateAuthor } from "../services/author_service";
 
 // Create a new debug instance
 const debug = Debug("prisma-books:author_controller");
@@ -18,7 +18,7 @@ const debug = Debug("prisma-books:author_controller");
  */
 export const index = async (req: Request, res: Response) => {
 	try {
-		const authors = await prisma.author.findMany();
+		const authors = await getAuthors();
 		res.send({ status: "success", data: authors });
 
 	} catch (err) {
@@ -43,14 +43,7 @@ export const show = async (req: Request, res: Response) => {
 	}
 
 	try {
-		const author = await prisma.author.findUniqueOrThrow({
-			where: {
-				id: authorId,
-			},
-			include: {
-				books: true,
-			},
-		});
+		const author = await getAuthor(authorId);
 		res.send({ status: "success", data: author });
 
 	} catch (err) {
@@ -81,9 +74,7 @@ export const store = async (req: Request, res: Response) => {
 	const validatedData: CreateAuthorData = matchedData(req);
 
     try {
-		const author = await prisma.author.create({
-			data: validatedData,
-		});
+		const author = await createAuthor(validatedData);
 		res.status(201).send({ status: "success", data: author });
 
 	} catch (err) {
@@ -120,12 +111,7 @@ export const update = async (req: Request, res: Response) => {
 	const validatedData: UpdateAuthorData = matchedData(req);
 
 	try {
-		const author = await prisma.author.update({
-			where: {
-				id: authorId,
-			},
-			data: validatedData,
-		});
+		const author = await updateAuthor(authorId, validatedData);
 		res.send({ status: "success", data: author });
 
 	} catch (err) {
@@ -149,11 +135,7 @@ export const destroy = async (req: Request, res: Response) => {
 	}
 
 	try {
-		await prisma.author.delete({
-			where: {
-				id: authorId,
-			}
-		});
+		await deleteAuthor(authorId);
 		res.status(204).send();
 
 	} catch (err) {
