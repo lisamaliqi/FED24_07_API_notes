@@ -7,6 +7,7 @@ import prisma from "../prisma";
 import Debug from "debug";
 import { matchedData, validationResult } from "express-validator";
 import { CreateBookData, UpdateBookData } from "../types/Book.types";
+import { createBook, deleteBook, getBook, getBooks, linkBookToAuthor, unlinkAuthorFromBook, updateBook } from "../services/book_service";
 
 // Create a new debug instance
 const debug = Debug("prisma-books:book_controller");
@@ -18,7 +19,7 @@ const debug = Debug("prisma-books:book_controller");
  */
 export const index = async (req: Request, res: Response) => {
     try {
-        const books = await prisma.book.findMany();
+        const books = await getBooks();
         res.send({ status: "success", data: books });
 
     } catch (err) {
@@ -52,15 +53,7 @@ export const show = async (req: Request, res: Response) => {
     };
 
     try {
-        const book = await prisma.book.findUniqueOrThrow({
-            where: {
-                id: bookId,
-            }, 
-            include: {
-                authors: true,
-                publisher: true,
-            },
-        });
+        const book = await getBook(bookId);
         res.send({ status: "success", data: book });
 
     } catch (err) {
@@ -91,9 +84,7 @@ export const store = async (req: Request, res: Response) => {
 	const validatedData: CreateBookData = matchedData(req);
 
     try {
-        const book = await prisma.book.create({
-            data: validatedData,
-        });
+        const book = await createBook(validatedData);
         res.status(201).send({ status: "success", data: book });
 
     } catch (err) {
@@ -133,12 +124,7 @@ export const update = async (req: Request, res: Response) => {
 
 
     try {
-        const book = await prisma.book.update({
-            where: {
-                id: bookId,
-            },
-            data: validatedData,
-        });
+        const book = await updateBook(bookId, validatedData);
         res.send({ status: "success", data: book });
 
     } catch (err) {
@@ -164,11 +150,7 @@ export const destroy = async (req: Request, res: Response) => {
     };
 
     try {
-        const book = await prisma.book.delete({
-            where: {
-                id: bookId,
-            },
-        });
+        const book = await deleteBook(bookId);
         res.status(204).send();
 
     } catch (err) {
@@ -198,19 +180,7 @@ export const addAuthor = async (req: Request, res: Response) => {
     }
 
     try {
-        const book = await prisma.book.update({
-            where: {
-                id: bookId,
-            },
-            data: {
-                authors: {
-                    connect: req.body,  // { "id": 8 }
-                },
-            },
-            include: {
-                authors: true,
-            },
-        });
+        const book = await linkBookToAuthor(bookId, req);
         res.status(201).send({ status: "success", data: book });
 
     } catch (err) {
@@ -236,21 +206,7 @@ export const removeAuthor = async (req: Request, res: Response) => {
     }
 
     try {
-        const book = await prisma.book.update({
-            where: {
-                id: bookId,
-            },
-            data: {
-                authors: {
-                    disconnect: {
-                        id: authorId,
-                    },
-                },
-            },
-            include: {
-                authors: true,
-            },
-        });
+        const book = await unlinkAuthorFromBook(bookId, authorId);
         res.status(200).send({ status: "success", data: book });
 
     } catch (err) {
