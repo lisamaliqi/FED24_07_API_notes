@@ -1,10 +1,8 @@
-export type CreateBookData = {
-	title: string;
-	pages: number;
-	publisherId: number | null;
-}
+import { Book } from "@prisma/client";
+
+
+export type CreateBookData = Omit<Book, 'id'>
+
 export type UpdateBookData = Partial<CreateBookData>;
 
-export type BookId = {
-	id: number;
-}
+export type BookId = Pick<Book, 'id'>
