@@ -10,6 +10,7 @@ import { matchedData, validationResult } from "express-validator";
 import { log } from "node:console";
 import { CreateAuthorData } from '../types/Author.types';
 import { CreateUserData } from '../types/User.types';
+import { createUser } from '../services/user_service';
 
 // create new debug instance
 const debug = Debug('prisma-books:register_controller');
@@ -47,13 +48,9 @@ export const register = async (req: Request, res: Response) => {
     //skapa användaren i databasen
     try {
         //skapa användaren
-        const user = await prisma.user.create({
-            data: {
-                name: validateData.name,
-                email: validateData.email,
-                password: hashed_password, 
-                //gör jag ej detta så kommer mitt password inte bli hashat och därmed synas i db (INTE BRA)
-            },
+        const user = await createUser({
+            ...validateData,
+            password: hashed_password
         });
 
         //skicka respons med 201 Created + status success
