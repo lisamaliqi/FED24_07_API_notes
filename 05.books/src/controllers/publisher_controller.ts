@@ -161,7 +161,7 @@ export const linkToBook = async (req: Request, res: Response) => {
     }
   
     try {
-      const publisher = await linkPublisherToBook(publisherID, req);
+      const publisher = await linkPublisherToBook(publisherID, req.body);
       res.status(201).send({
         status: "success",
         publisher,

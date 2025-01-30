@@ -3,7 +3,7 @@
  */
 import { Request } from "express-validator/lib/base";
 import prisma from "../prisma";
-import { CreatePublisherData, UpdatePublisherData } from "../types/Publisher.types";
+import { BookId, CreatePublisherData, UpdatePublisherData } from "../types/Publisher.types";
 
 /**
  * Get all publishers
@@ -73,14 +73,14 @@ export const deletePublisher = async (publisherId: number) => {
  *
  * Link publisher to book(s)
  */
-export const linkPublisherToBook = async (publisherId: number, req: Request) => {
+export const linkPublisherToBook = async (publisherId: number, bookIdOrIds: BookId | BookId[]) => {
     return await prisma.publisher.update({
         where: { 
             id: publisherId 
         },
         data: {
           books: {
-            connect: req.body,
+            connect: bookIdOrIds,
           },
         },
         include: {
