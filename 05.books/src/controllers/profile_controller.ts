@@ -38,6 +38,20 @@ export const getProfile = async (req: Request, res: Response) => {
 };
 
 
+/**
+ * Update the authenticated user's profile
+ *
+ * PATCH /profile
+ */
+export const updateProfile = async (req: Request, res: Response) => {
+	res.status(501).send({
+		status: "success",
+		data: null,
+	});
+}
+
+
+
 
 /**
  * Get the authenticated users books
@@ -54,11 +68,24 @@ export const getBooks = async (req: Request, res: Response) => {
 
 
 /**
- * Update the authenticated users profile
+ * Link books to the authenticated user
  *
- * PATCH /profile
+ * POST /profile/books
  */
-export const updateProfile = async (req: Request, res: Response) => {
+export const addBooks = async (req: Request, res: Response) => {
+	res.status(501).send({
+		status: "success",
+		data: null,
+	});
+}
+
+
+/**
+ * Link books to the authenticated user
+ *
+ * DELETE /profile/books/:bookId
+ */
+export const removeBook = async (req: Request, res: Response) => {
     res.status(501).send({
         status: 'success',
         data: null

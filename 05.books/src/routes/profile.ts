@@ -1,6 +1,6 @@
 import express from "express";
 import { index, show, store, update, destroy } from "../controllers/_controller";
-import { getBooks, getProfile, updateProfile } from "../controllers/profile_controller";
+import { addBooks, getBooks, getProfile, removeBook, updateProfile } from "../controllers/profile_controller";
 
 // Create a new Resource router
 const router = express.Router();
@@ -12,6 +12,15 @@ const router = express.Router();
  */
 router.get("/", getProfile);
 
+
+/**
+ * PATCH /profile
+ *
+ * Update the authenticated user's profile
+ */
+router.patch("/", updateProfile);
+
+
 /**
  * GET /profile/books
  *
@@ -21,17 +30,19 @@ router.get("/:resourceId", getBooks);
 
 
 /**
- * PATCH /profile
+ * POST /profile/books
  *
- * Update the autheticated users profile
+ * Link books to authenticated user
  */
-router.patch("/:resourceId", updateProfile);
+router.post("/books", addBooks);
+
 
 /**
- * DELETE /resources/:resourceId
+ * DELETE /profile/books/:bookId
  *
- * Delete a resource
+ * Unlink book from authenticated user
  */
-router.delete("/:resourceId", destroy);
+router.delete("/books/:bookId", removeBook);
+
 
 export default router;
