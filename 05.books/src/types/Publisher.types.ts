@@ -3,6 +3,3 @@ export type CreatePublisherData = {
 }
 export type UpdatePublisherData = Partial<CreatePublisherData>;
 
-export type BookId = {
-	id: number;
-}

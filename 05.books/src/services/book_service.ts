@@ -3,7 +3,8 @@
  */
 import { Request } from "express-validator/lib/base";
 import prisma from "../prisma";
-import { AuthorId, CreateBookData, UpdateBookData } from "../types/Book.types";
+import { CreateBookData, UpdateBookData } from "../types/Book.types";
+import { AuthorId } from "../types/Author.types";
 
 /**
  * Get all books

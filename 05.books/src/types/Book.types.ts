@@ -5,6 +5,6 @@ export type CreateBookData = {
 }
 export type UpdateBookData = Partial<CreateBookData>;
 
-export type AuthorId = {
+export type BookId = {
 	id: number;
 }
