@@ -180,7 +180,7 @@ export const addAuthor = async (req: Request, res: Response) => {
     }
 
     try {
-        const book = await linkBookToAuthor(bookId, req);
+        const book = await linkBookToAuthor(bookId, req.body);
         res.status(201).send({ status: "success", data: book });
 
     } catch (err) {

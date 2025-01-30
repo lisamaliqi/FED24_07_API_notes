@@ -4,3 +4,7 @@ export type CreateBookData = {
 	publisherId: number | null;
 }
 export type UpdateBookData = Partial<CreateBookData>;
+
+export type AuthorId = {
+	id: number;
+}
