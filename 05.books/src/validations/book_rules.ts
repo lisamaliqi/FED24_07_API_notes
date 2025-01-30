@@ -2,6 +2,21 @@
  * Validation Rules for Book resource
  */
 import { body } from "express-validator";
+import { getPublisher } from "../services/publisher_service";
+
+/**
+ * Validera att publisher id finns
+ * 
+ * @param value ID av publisher
+ * @returns
+ */
+
+
+const validatePublisherExists = (value: number) => {
+    // hämta publisher eller skicka error ifall den inte finns
+    return getPublisher(value); //kan också skriva async await om man vill, men kanske lite onödigt 
+};
+
 
 export const createBookRules = [
 	body("title")
@@ -12,8 +27,9 @@ export const createBookRules = [
 		.isInt({ min: 1 }).withMessage("has to be a positive integer"),
 
 	body("publisherId")
-		// .optional()
-		.isInt({ min: 1 }).withMessage("has to be a positive integer"),
+		.optional()
+		.isInt({ min: 1 }).withMessage("has to be a positive integer").bail()
+        .custom(validatePublisherExists).withMessage('Publisher not found'),
 ];
 
 export const updateBookRules = [
@@ -27,6 +43,7 @@ export const updateBookRules = [
 		.isInt({ min: 1 }).withMessage("has to be a positive integer"),
 
 	body("publisherId")
-		// .optional()
-		.isInt({ min: 1 }).withMessage("has to be a positive integer"),
+		.optional()
+		.isInt({ min: 1 }).withMessage("has to be a positive integer").bail()
+        .custom(validatePublisherExists).withMessage('Publisher not found'),
 ];
