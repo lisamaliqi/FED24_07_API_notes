@@ -11,6 +11,10 @@ import prisma from "../prisma";
  * GET /profile
  */
 export const getProfile = async (req: Request, res: Response) => {
+    // So, we know that the user authenticated with the correct credentials
+	// but how the **** do we know WHO they are inside the controller?
+    const authenticatedUser = req.user;
+
     res.send({
         status: 'success',
         data: null

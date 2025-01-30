@@ -10,6 +10,7 @@ import { getUserByEmail } from '../../services/user_service';
 //create a new debug instance 
 const debug = Debug('prisma-books:basic');
 
+
 export const basic = async (req: Request, res: Response, next: NextFunction) => {
     debug('hello from auth/basic!!');
 
@@ -117,7 +118,8 @@ export const basic = async (req: Request, res: Response, next: NextFunction) => 
 
     
     // 8. Attach user to request
-
+    req.user = user;
+    //user är ett objekt ELLER undefined (kolla /types/express/index.ts)
 
 
     // 9. Profile!
