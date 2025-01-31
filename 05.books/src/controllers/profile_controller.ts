@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import prisma from "../prisma";
 import Debug from "debug";
+import { getBooksByUserId } from "../services/book_service";
 
 //skapa ny debug instance
 const debug = Debug('prisma-books:profile_controller');
@@ -59,10 +60,28 @@ export const updateProfile = async (req: Request, res: Response) => {
  * GET /profile/books
  */
 export const getBooks = async (req: Request, res: Response) => {
-    res.send({
-        status: 'success',
-        data: null
-    });
+    // Om någon vill ta bort authentication från routen för denna metod? ERRORORORORORO
+    if (!req.user) {
+        throw new Error('Trying to access authenticated user but none exists. Did you remove authetication from this route????')
+    };
+
+    //hämta ut id 
+    const userId = req.user.id;
+
+    try {
+        const books = await getBooksByUserId(userId);
+
+        res.send({
+            status: 'success',
+            data: books,
+        });
+
+
+    } catch (err) {
+        debug('error when trying to get authenticated users books #%d: %O', userId, err);
+        const { status_code, body } = handlePrismaError(err);
+        res.status(status_code).send(body);
+    };
 };
 
 

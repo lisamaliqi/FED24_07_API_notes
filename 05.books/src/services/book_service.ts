@@ -5,6 +5,7 @@ import { Request } from "express-validator/lib/base";
 import prisma from "../prisma";
 import { CreateBookData, UpdateBookData } from "../types/Book.types";
 import { AuthorId } from "../types/Author.types";
+import { userInfo } from "node:os";
 
 /**
  * Get all books
@@ -12,6 +13,27 @@ import { AuthorId } from "../types/Author.types";
 export const getBooks = async () => {
     return await prisma.book.findMany();
 };
+
+
+
+/**
+ * Get all books owned bt the specified user
+ * 
+ * @param userId 
+ */
+export const getBooksByUserId = (userId: number) => {
+    return prisma.book.findMany({
+        where: {
+            ownedBy: {
+                some: {
+                    id: userId,
+                },
+            },
+        },
+    });
+};  
+
+
 
 /**
  * Get a single book
