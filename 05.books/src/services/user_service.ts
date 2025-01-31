@@ -4,7 +4,7 @@
 
 import prisma from "../prisma"
 import { BookId } from "../types/Book.types";
-import { CreateUserData } from "../types/User.types";
+import { CreateUserData, UpdateUserData } from "../types/User.types";
 
 /**
  * Get a User by email
@@ -36,7 +36,28 @@ export const createUser = (data: CreateUserData) => {
             // ...validateData,
             // password: hashed_password,
     });
-}
+};
+
+
+
+/**
+ * Update a user
+ * 
+ * @param userId 
+ * @param data 
+ * @returns 
+ */
+
+export const updateUser = (userId: number, data: UpdateUserData) => {
+    return prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: data,
+    });
+};
+
+
 
 
 /**

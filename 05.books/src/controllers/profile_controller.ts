@@ -6,10 +6,16 @@ import { handlePrismaError } from "../exceptions/prisma";
 import prisma from "../prisma";
 import Debug from "debug";
 import { getBooksByOwner } from "../services/book_service";
-import { linkBooksToUser, unlinkBookFromUser } from "../services/user_service";
+import { linkBooksToUser, unlinkBookFromUser, updateUser } from "../services/user_service";
+import { UpdateUserData } from "../types/User.types";
+import { matchedData, validationResult } from "express-validator";
+import bcrypt from 'bcrypt';
 
 //skapa ny debug instance
 const debug = Debug('prisma-books:profile_controller');
+
+// get environment variable 
+const SALT_ROUNDS =  Number(process.env.SALT_ROUNDS) || 10;
 
 /**
  * Get the authenticated users profile
@@ -46,10 +52,45 @@ export const getProfile = async (req: Request, res: Response) => {
  * PATCH /profile
  */
 export const updateProfile = async (req: Request, res: Response) => {
-	res.status(501).send({
-		status: "success",
-		data: null,
-	});
+    // Om någon vill ta bort authentication från routen för denna metod? ERRORORORORORO
+    if (!req.user) {
+        throw new Error('Trying to access authenticated user but none exists. Did you remove authetication from this route????')
+    };
+
+    const userId = req.user.id;
+
+    // Check for any validation errors
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+        res.status(400).send({
+            status: "fail",
+            data: validationErrors.array(),
+        });
+        return;
+    }
+
+    // Get only the validated data
+    const validatedData: UpdateUserData = matchedData(req);
+
+    if(validatedData.password) {
+        //kalkylera hash + salt för lösenordet 
+        validatedData.password = await bcrypt.hash(validatedData.password, SALT_ROUNDS); 
+    }
+
+    try {
+        // update user 
+        const user = await updateUser(userId, validatedData);
+
+        res.send({
+            status: "success",
+            data: user,
+        });
+
+    } catch (err) {
+        debug('error when trying to uppdate authenticated users %d: %O', userId, err);
+        const { status_code, body } = handlePrismaError(err);
+        res.status(status_code).send(body);
+    };
 }
 
 
