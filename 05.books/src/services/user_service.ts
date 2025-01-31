@@ -3,6 +3,7 @@
  */
 
 import prisma from "../prisma"
+import { BookId } from "../types/Book.types";
 import { CreateUserData } from "../types/User.types";
 
 /**
@@ -43,7 +44,8 @@ export const createUser = (data: CreateUserData) => {
  * 
  * @param userId 
  */
-
+/* 
+//detta är en annan väg, behövs ej då jag redan har getBooks i profile_controller
 export const getUserBooks = async (userId: number) => {
     const user = await prisma.user.findUniqueOrThrow({
         select: {
@@ -51,6 +53,32 @@ export const getUserBooks = async (userId: number) => {
         },
         where: {
             id: userId
+        },
+    });
+
+    return user.books;
+}; */
+
+
+/**
+ * link books to user 
+ * 
+ * @param userId ID of user
+ * @param bookIdOrBooksIds book ID(s) to link
+ * @returns 
+ */
+export const linkBooksToUser = async (userId: number, bookIdOrBooksIds: BookId | BookId[]) => {
+    const user = await prisma.user.update({
+        select: {
+            books: true
+        },
+        where: {
+            id: userId,
+        },
+        data: {
+            books: {
+                connect: bookIdOrBooksIds,
+            },
         },
     });
 
