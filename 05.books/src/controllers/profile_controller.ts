@@ -6,7 +6,7 @@ import { handlePrismaError } from "../exceptions/prisma";
 import prisma from "../prisma";
 import Debug from "debug";
 import { getBooksByOwner } from "../services/book_service";
-import { linkBooksToUser } from "../services/user_service";
+import { linkBooksToUser, unlinkBookFromUser } from "../services/user_service";
 
 //skapa ny debug instance
 const debug = Debug('prisma-books:profile_controller');
@@ -119,13 +119,35 @@ export const addBooks = async (req: Request, res: Response) => {
 
 
 /**
- * Link books to the authenticated user
+ * Unlink books to the authenticated user
  *
  * DELETE /profile/books/:bookId
  */
 export const removeBook = async (req: Request, res: Response) => {
-    res.status(501).send({
-        status: 'success',
-        data: null
-    });
+    	// Om någon vill ta bort authentication från routen för denna metod? ERRORORORORORO
+        if (!req.user) {
+            throw new Error('Trying to access authenticated user but none exists. Did you remove authetication from this route????')
+        };
+    
+        //hämta ut id 
+        const userId = req.user.id;
+        const bookId = Number(req.params.bookId);
+
+        if (!bookId) {
+            res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
+            return;
+        }
+    
+        try {
+            //ta bort boken
+            await unlinkBookFromUser(userId, bookId);
+    
+            res.status(204).send();
+    
+    
+        } catch (err) {
+            debug('error when trying to unlinks book %d to authenticated users %d: ', req.body, userId, err);
+            const { status_code, body } = handlePrismaError(err);
+            res.status(status_code).send(body);
+        };
 };

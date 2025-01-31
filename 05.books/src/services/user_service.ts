@@ -84,3 +84,29 @@ export const linkBooksToUser = async (userId: number, bookIdOrBooksIds: BookId |
 
     return user.books;
 };
+
+
+/**
+ * Remove book from user
+ * 
+ * @param userId User ID
+ * @param bookId Book ID to remove
+ */
+
+export const unlinkBookFromUser = async (userId: number, bookId: number) => {
+    const user = await prisma.user.update({
+        select: {
+            books: true
+        },
+        where: {
+            id: userId,
+        },
+        data: {
+            books: {
+                disconnect: {
+                    id: bookId,
+                },
+            },
+        },
+    });
+};
