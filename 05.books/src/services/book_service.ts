@@ -21,7 +21,7 @@ export const getBooks = async () => {
  * 
  * @param userId 
  */
-export const getBooksByUserId = (userId: number) => {
+export const getBooksByOwner = (userId: number) => {
     return prisma.book.findMany({
         where: {
             ownedBy: {

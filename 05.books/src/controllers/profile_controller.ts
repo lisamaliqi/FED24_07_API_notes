@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import prisma from "../prisma";
 import Debug from "debug";
-import { getBooksByUserId } from "../services/book_service";
+import { getBooksByOwner } from "../services/book_service";
 
 //skapa ny debug instance
 const debug = Debug('prisma-books:profile_controller');
@@ -69,7 +69,7 @@ export const getBooks = async (req: Request, res: Response) => {
     const userId = req.user.id;
 
     try {
-        const books = await getBooksByUserId(userId);
+        const books = await getBooksByOwner(userId);
 
         res.send({
             status: 'success',
