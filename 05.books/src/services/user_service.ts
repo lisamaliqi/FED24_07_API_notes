@@ -36,3 +36,23 @@ export const createUser = (data: CreateUserData) => {
             // password: hashed_password,
     });
 }
+
+
+/**
+ * Get a users book
+ * 
+ * @param userId 
+ */
+
+export const getUserBooks = async (userId: number) => {
+    const user = await prisma.user.findUniqueOrThrow({
+        select: {
+            books: true,
+        },
+        where: {
+            id: userId
+        },
+    });
+
+    return user.books;
+};
