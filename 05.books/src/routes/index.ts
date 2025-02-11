@@ -3,7 +3,7 @@ import authorRouter from "./author";
 import bookRouter from "./book";
 import profileRouter from "./profile";
 import publisherRouter from "./publisher";
-import { register} from "../controllers/register_controller"
+import { register} from "../controllers/auth_controller"
 import { createUserRules } from "../validations/user_rules";
 import { basic } from "../middleware/auth/basic";
 
