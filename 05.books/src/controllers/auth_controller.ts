@@ -22,8 +22,8 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const SALT_ROUNDS =  Number(process.env.SALT_ROUNDS) || 10;
 
 interface LoginRequestBody {
-	email?: string;
-	password?: string;
+	email: string;
+	password: string;
 }
 
 
@@ -33,16 +33,20 @@ interface LoginRequestBody {
  * POST /login
  */
 export const login = async (req: Request, res: Response) => {
-	// get (destructure) email and password from request body
-    const { email, password }: LoginRequestBody = req.body;
+	// Check for any validation errors
+	const validationErrors = validationResult(req);
 
-    // check that user sent email and password
-	if (!email || !password) {
-		debug("User did not send email or password");
-		res.status(401).send({ status: "fail", data: { message: "Authorization required" }});
-		return;
+	if (!validationErrors.isEmpty()) {
+		res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		});
+
+        return;
 	};
 
+    // get (destructure) email and password from request body
+	const { email, password }: LoginRequestBody = matchedData(req);
 
 	// find user with email, otherwise bail 🛑
     const user = await getUserByEmail(email);
@@ -77,7 +81,7 @@ export const login = async (req: Request, res: Response) => {
 		res.status(500).send({ status: "error", message: "No access token secret defined" });
 		return;
 	};
-    
+
 	const access_token = jwt.sign(payload, ACCESS_TOKEN_SECRET, {
 		expiresIn: ACCESS_TOKEN_LIFETIME,
 	});
