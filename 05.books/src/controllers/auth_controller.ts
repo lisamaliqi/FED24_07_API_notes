@@ -69,7 +69,7 @@ export const login = async (req: Request, res: Response) => {
 
 	// construct jwt-payload
     const payload: JwtAccessTokenPayload = {
-		sub: user.id,
+		id: user.id,
 		name: user.name,
 		email: user.email,
 	};

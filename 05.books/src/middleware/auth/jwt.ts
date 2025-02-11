@@ -46,12 +46,13 @@ export const validateAccessToken = async (req: Request, res: Response, next: Nex
 	};
 
 	try {
-		const payload = jwt.verify(token, ACCESS_TOKEN_SECRET) as unknown as JwtAccessTokenPayload;  // stupid TypeScript
+		const payload = jwt.verify(token, ACCESS_TOKEN_SECRET) as JwtAccessTokenPayload;
+
 		debug("Payload: %O", payload);
 
         // 5. Attach payload to request
 		req.user = {
-			id: payload.sub,
+			id: payload.id,
 			name: payload.name,
 			email: payload.email,
 		};
