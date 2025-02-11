@@ -14,7 +14,7 @@ import { createUser, getUserByEmail } from '../services/user_service';
 import { JwtAccessTokenPayload, JwtRefreshTokenPayload } from "../types/JWT.types";
 
 // create new debug instance
-const debug = Debug('prisma-books:register_controller');
+const debug = Debug("prisma-books:auth_controller");
 
 // get environment variable 
 const ACCESS_TOKEN_LIFETIME = process.env.ACCESS_TOKEN_LIFETIME as StringValue || "15min"; // default 15min
@@ -113,7 +113,7 @@ export const login = async (req: Request, res: Response) => {
 		sameSite: "strict",
 		path: "/refresh",
 	});
-    
+
 
 	// respond with access-token
 	res.send({

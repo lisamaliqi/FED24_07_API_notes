@@ -1,12 +1,14 @@
 
 //Importera allt från alla andra filer vi har i dokumentet 05
-import app from "./src/app";
-import http from "http";
 import * as dotenv from "dotenv";
-import Debug from "debug";
+
 
 // Initiera vår dotenv så den läser vår .env fil
 dotenv.config();
+
+import app from "./src/app";
+import Debug from "debug";
+import http from "http";
 
 // Läs PORT så den startar från env filen alternativt default på 3000
 const PORT = process.env.PORT || 3000;
