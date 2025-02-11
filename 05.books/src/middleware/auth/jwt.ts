@@ -3,8 +3,9 @@
  */
 import Debug from "debug";
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { JwtAccessTokenPayload } from "../../types/JWT.types";
+
 
 // Create a new debug instance
 const debug = Debug("prisma-books:jwt");
@@ -57,9 +58,16 @@ export const validateAccessToken = async (req: Request, res: Response, next: Nex
 
 		// 6. Profit 💰🤑
 		next();
-        
+
 	} catch (err) {
 		debug("JWT Verify failed: %O", err);
+
+        // if token has expired, let the user know
+		if (err instanceof TokenExpiredError) {
+			res.status(401).send({ status: "fail", message: "Authorization token has expired" });
+			return;
+		};
+
 		res.status(401).send({ status: "fail", message: "Authorization denied" });
 		return;
 	};
