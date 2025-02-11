@@ -6,6 +6,7 @@ import Debug from 'debug';
 import bcrypt from "bcrypt";
 import { Request, Response, NextFunction } from 'express';
 import { getUserByEmail } from '../../services/user_service';
+import { extractAndValidateAuthHeader } from "../../helpers/auth_helpers";
 
 //create a new debug instance 
 const debug = Debug('prisma-books:basic');
@@ -14,45 +15,18 @@ const debug = Debug('prisma-books:basic');
 export const basic = async (req: Request, res: Response, next: NextFunction) => {
     debug('hello from auth/basic!!');
 
-    // 1. Make sure Authorization header exists, otherwise bail📛
-    debug('headers: %O', req.headers.authorization);
-    
-    // Om den är undefined eller inte finns
-    if (!req.headers.authorization) {
-        debug('Authorization header missing');
-        res.status(401).send({ 
-            status: 'fail', 
+    let base64Payload: string;
+
+	try {
+		base64Payload = extractAndValidateAuthHeader(req, "Basic");
+
+	} catch (err) {
+		res.status(401).send({ 
+            status: "fail", 
             data: { 
-                message: 'Authorizaton required'
-            }
-        }); 
-        return;
-    };
+                message: "Authorization header is missing or not of the expected type" 
+            }});
 
-
-    // 2. Split Authorization header on ` `
-    // en string kan se ut såhär: 'Basic cGVsbGE6ZmFpbHdvcmQ='
-    // [0] = basic                      authScheme
-    // [1] = cGVsbGE6ZmFpbHdvcmQ=       base64Payload
-    //splitta den i två delar, mellanrummet ska splitta på dom
-    const [authType, base64Payload] = req.headers.authorization.split(' ');
-
-    //hämta ut de två värdena
-    debug('Auth Type: %O', authType);
-    debug('Base64 Payload: %O', base64Payload);
-
-
-    // 3. Check that Authorization schema is 'Basic', otherwise bail📛
-    // Om authType inte är basic så ska det bli error
-    // Gör om authType till all lowecase ifall användaren skriver BasIC ex
-    if (authType.toLocaleLowerCase() !== 'basic') {
-        debug('Authorization basic missing');
-        res.status(401).send({ 
-            status: 'fail', 
-            data: { 
-                message: 'Authorizaton required'
-            }
-        }); 
         return;
     };
 
