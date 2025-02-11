@@ -7,6 +7,7 @@ import { login, refresh, register} from "../controllers/auth_controller"
 import { createUserRules } from "../validations/user_rules";
 import { validateAccessToken } from "../middleware/auth/jwt";
 import { loginRules } from "../validations/auth_rules";
+import { validateRequest } from "../middleware/validateRequest";
 
 
 // Create a new Root router
@@ -62,7 +63,7 @@ router.use('/publishers', publisherRouter)
  *
  * POST /login
  */
-router.post("/login", loginRules);
+router.post("/login", loginRules, validateRequest, login);
 
 
 /**

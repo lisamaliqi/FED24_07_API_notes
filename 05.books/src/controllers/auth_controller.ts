@@ -35,18 +35,6 @@ interface LoginRequestBody {
  * POST /login
  */
 export const login = async (req: Request, res: Response) => {
-	// Check for any validation errors
-	const validationErrors = validationResult(req);
-
-	if (!validationErrors.isEmpty()) {
-		res.status(400).send({
-			status: "fail",
-			data: validationErrors.array(),
-		});
-
-        return;
-	};
-
     // get (destructure) email and password from request body
 	const { email, password }: LoginRequestBody = matchedData(req);
 
