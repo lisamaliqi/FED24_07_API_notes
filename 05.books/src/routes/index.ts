@@ -3,7 +3,7 @@ import authorRouter from "./author";
 import bookRouter from "./book";
 import profileRouter from "./profile";
 import publisherRouter from "./publisher";
-import { register} from "../controllers/auth_controller"
+import { login, register} from "../controllers/auth_controller"
 import { createUserRules } from "../validations/user_rules";
 import { basic } from "../middleware/auth/basic";
 
@@ -31,6 +31,11 @@ router.get("/", (req, res) => {
 //flytta alla get, post, patch och delete till author.ts i src/routes för att göra sidan fin 
 //      Author routes
 //skriver /authors i början så jag slipper ha det i books, kan ta bort första /authors i mina get, post, patch, del osv
+
+//heter numera detta: 
+/**
+ * Resource routes
+ */
 router.use("/authors", authorRouter);
 
 
@@ -50,6 +55,13 @@ router.use('/profile', basic, profileRouter);
 //      Publisher routes
 router.use('/publishers', publisherRouter)
 
+
+/**
+ * Log in a user
+ *
+ * POST /login
+ */
+router.post("/login", login);
 
 
 /**
