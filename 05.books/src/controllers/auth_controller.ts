@@ -5,9 +5,7 @@ import bcrypt from 'bcrypt';
 import Debug from "debug";
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
-import prisma from "../prisma";
 import { matchedData, validationResult } from "express-validator";
-import { log } from "node:console";
 import { CreateAuthorData } from '../types/Author.types';
 import { CreateUserData } from '../types/User.types';
 import { createUser } from '../services/user_service';
@@ -17,6 +15,32 @@ const debug = Debug('prisma-books:register_controller');
 
 // get environment variable 
 const SALT_ROUNDS =  Number(process.env.SALT_ROUNDS) || 10;
+
+/**
+ * Log in a user
+ *
+ * POST /login
+ */
+export const login = async (req: Request, res: Response) => {
+	// get (destructure) email and password from request body
+
+	// find user with email, otherwise bail 🛑
+
+	// verify credentials against hash, otherwise bail 🛑
+
+	// construct jwt-payload
+
+	// sign payload with access-token secret and get access-token
+    
+	// respond with access-token
+	res.send({
+		status: "success",
+		data: null,
+	});
+};
+
+
+
 /**
  * Register a new user
  *
