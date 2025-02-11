@@ -3,7 +3,7 @@ import authorRouter from "./author";
 import bookRouter from "./book";
 import profileRouter from "./profile";
 import publisherRouter from "./publisher";
-import { login, register} from "../controllers/auth_controller"
+import { login, refresh, register} from "../controllers/auth_controller"
 import { createUserRules } from "../validations/user_rules";
 import { validateAccessToken } from "../middleware/auth/jwt";
 import { loginRules } from "../validations/auth_rules";
@@ -63,6 +63,14 @@ router.use('/publishers', publisherRouter)
  * POST /login
  */
 router.post("/login", loginRules);
+
+
+/**
+ * Refresh authentication
+ *
+ * POST /refresh
+ */
+router.post("/refresh", refresh);
 
 
 /**

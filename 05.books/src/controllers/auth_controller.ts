@@ -3,7 +3,7 @@
  */
 import bcrypt from 'bcrypt';
 import Debug from "debug";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { StringValue } from "ms";
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
@@ -121,6 +121,66 @@ export const login = async (req: Request, res: Response) => {
 		data: {
 			access_token,
 		},
+	});
+};
+
+
+/**
+ * Issue a new access_token using a refresh_token
+ *
+ * POST /refresh
+ */
+export const refresh = async (req: Request, res: Response) => {
+
+	// 1. Get refresh token from cookie 🍪
+	debug("🍪 Cookies: %o", req.cookies);
+	const refresh_token: string | undefined = req.cookies.refresh_token;
+
+	if (!refresh_token) {
+		debug("No refresh token found in cookies 😢");
+		res.status(401).send({ status: "fail", data: { message: "Authorization required" }});
+		return;
+	};
+
+
+	// 2. Verify refresh token and extract payload with user id
+	if (!REFRESH_TOKEN_SECRET) {
+		debug("🛑🛑🛑 REFRESH_TOKEN_SECRET missing in environment");
+		res.status(500).send({ status: "error", message: "No refresh token secret defined" });
+		return;
+	};
+
+	let refresh_payload: JwtRefreshTokenPayload;
+
+	try {
+		// verify token
+		refresh_payload = jwt.verify(refresh_token, REFRESH_TOKEN_SECRET) as JwtRefreshTokenPayload;
+
+	} catch (err) {
+		debug("JWT Refresh Verify failed: %O", err);
+
+		// if token has expired, let the user know
+		if (err instanceof TokenExpiredError) {
+			res.status(401).send({ status: "fail", message: "Refresh token has expired" });
+			return;
+		};
+
+		res.status(401).send({ status: "fail", message: "Authorization denied" });
+		return;
+	};
+	// 3. Find user
+
+
+	// 4. Construct new access token payload
+
+
+	// 5. Sign payload with access token secret
+
+
+	// 6. Respond with the new access token
+	res.send({
+		status: "success",
+		data: null,
 	});
 };
 
