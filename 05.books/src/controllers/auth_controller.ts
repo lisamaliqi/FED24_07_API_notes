@@ -4,6 +4,7 @@
 import bcrypt from 'bcrypt';
 import Debug from "debug";
 import jwt from "jsonwebtoken";
+import { StringValue } from "ms";
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import { matchedData, validationResult } from "express-validator";
@@ -16,6 +17,7 @@ import { JwtAccessTokenPayload } from "../types/JWT.types";
 const debug = Debug('prisma-books:register_controller');
 
 // get environment variable 
+const ACCESS_TOKEN_LIFETIME = process.env.ACCESS_TOKEN_LIFETIME as StringValue || "15min"; // default 15min
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const SALT_ROUNDS =  Number(process.env.SALT_ROUNDS) || 10;
 
@@ -75,7 +77,10 @@ export const login = async (req: Request, res: Response) => {
 		res.status(500).send({ status: "error", message: "No access token secret defined" });
 		return;
 	};
-	const access_token = jwt.sign(payload, ACCESS_TOKEN_SECRET);
+    
+	const access_token = jwt.sign(payload, ACCESS_TOKEN_SECRET, {
+		expiresIn: ACCESS_TOKEN_LIFETIME,
+	});
 
 
 	// respond with access-token
