@@ -2,12 +2,14 @@
  * Extend types inside the Express namespace
  */
 
-import { User } from "@prisma/client";
+import { AuthenticatedUser } from "../Auth.types";
+
+
 
 declare global {
     namespace Express {
         export interface Request {
-            user?: User;
+            user?: AuthenticatedUser;
         }
     }
 }
