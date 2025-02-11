@@ -9,3 +9,7 @@ export interface JwtAccessTokenPayload extends JwtPayload {
 	name: string | null;
 	email: string;
 }
+
+export interface JwtRefreshTokenPayload extends JwtPayload {
+	id: number;
+}

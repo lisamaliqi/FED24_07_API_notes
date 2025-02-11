@@ -11,7 +11,7 @@ import { matchedData, validationResult } from "express-validator";
 import { CreateAuthorData } from '../types/Author.types';
 import { CreateUserData } from '../types/User.types';
 import { createUser, getUserByEmail } from '../services/user_service';
-import { JwtAccessTokenPayload } from "../types/JWT.types";
+import { JwtAccessTokenPayload, JwtRefreshTokenPayload } from "../types/JWT.types";
 
 // create new debug instance
 const debug = Debug('prisma-books:register_controller');
@@ -20,6 +20,8 @@ const debug = Debug('prisma-books:register_controller');
 const ACCESS_TOKEN_LIFETIME = process.env.ACCESS_TOKEN_LIFETIME as StringValue || "15min"; // default 15min
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const SALT_ROUNDS =  Number(process.env.SALT_ROUNDS) || 10;
+const REFRESH_TOKEN_LIFETIME = process.env.REFRESH_TOKEN_LIFETIME as StringValue || "1h"; // default 1 hour
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 interface LoginRequestBody {
 	email: string;
@@ -67,7 +69,7 @@ export const login = async (req: Request, res: Response) => {
 	debug("✅ Password for user %s was correct 🥳", email);
 
 
-	// construct jwt-payload
+	// construct access-token payload
     const payload: JwtAccessTokenPayload = {
 		id: user.id,
 		name: user.name,
@@ -86,6 +88,32 @@ export const login = async (req: Request, res: Response) => {
 		expiresIn: ACCESS_TOKEN_LIFETIME,
 	});
 
+
+    // construct refresh-token payload
+	const refresh_payload: JwtRefreshTokenPayload = {
+		id: user.id,
+	};
+    
+
+	// sign payload with refresh-token secret and get refresh-token
+	if (!REFRESH_TOKEN_SECRET) {
+		debug("🛑🛑🛑 REFRESH_TOKEN_SECRET missing in environment");
+		res.status(500).send({ status: "error", message: "No refresh token secret defined" });
+		return;
+	};
+
+	const refresh_token = jwt.sign(refresh_payload, REFRESH_TOKEN_SECRET, {
+		expiresIn: REFRESH_TOKEN_LIFETIME,
+	});
+
+
+	// set refresh-token as a http-only cookie
+	res.cookie("refresh_token", refresh_token, {
+		httpOnly: true,
+		sameSite: "strict",
+		path: "/refresh",
+	});
+    
 
 	// respond with access-token
 	res.send({
