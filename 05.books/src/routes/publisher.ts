@@ -4,6 +4,7 @@ import { handlePrismaError } from "../exceptions/prisma";
 import { destroy, index, show, store, update, linkToBook, unlinkFromBook } from "../controllers/publisher_controller";
 import { describe } from "node:test";
 import { createPublisherRules, updatePublisherRules } from "../validations/publisher_rules";
+import { validateRequest } from "../middleware/validateRequest";
 
 // Create a new Publisher router
 const router = express.Router();
@@ -27,14 +28,14 @@ router.get("/:publisherId", show);
  *
  * Create a publisher
  */
-router.post("/", createPublisherRules, store);
+router.post("/", createPublisherRules, validateRequest, store);
 
 /**
  * PATCH /publishers/:publisherId
  *
  * Update a publisher
  */
-router.patch("/:publisherId", updatePublisherRules, update);
+router.patch("/:publisherId", updatePublisherRules, validateRequest, update);
 
 /**
  * DELETE /publishers/:publisherId

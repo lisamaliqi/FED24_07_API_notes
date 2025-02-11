@@ -7,7 +7,7 @@ import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { StringValue } from "ms";
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
-import { matchedData, validationResult } from "express-validator";
+import { matchedData } from "express-validator";
 import { CreateAuthorData } from '../types/Author.types';
 import { CreateUserData } from '../types/User.types';
 import { createUser, getUserByEmail, getUserById } from '../services/user_service';
@@ -207,18 +207,9 @@ export const refresh = async (req: Request, res: Response) => {
  * validate incoming data and bail if validation fails 
  */
 export const register = async (req: Request, res: Response) => {
-    //validera inkommande data
-    const validationErrors = validationResult(req);
-    if(!validationErrors.isEmpty()) {
-        res.status(400).send({
-            status: 'fail',
-            data: validationErrors.array(),
-        });
-        return;
-    };
-
     //få endast validerade datan från requesten 
     const validateData: CreateUserData = matchedData(req);
+
     // debug('req.body: ', req.body); //visar allt du skriver i din postman (ex ink också id)
     debug('validatedData: ', validateData); //visar bara det man validerar i din postman (ex ink INTE id pga validerar ej i index.ts)
 
@@ -243,10 +234,9 @@ export const register = async (req: Request, res: Response) => {
         debug("Error when trying to create user %o: %O", validateData, err);
         const { status_code, body } = handlePrismaError(err);
         res.status(status_code).send(body);
-    }
+    };
+};
 
-
-}
 
 /**
  * Get a single resource

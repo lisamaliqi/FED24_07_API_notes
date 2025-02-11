@@ -4,7 +4,7 @@
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import Debug from "debug";
-import { matchedData, validationResult } from "express-validator";
+import { matchedData } from "express-validator";
 import { CreateAuthorData, UpdateAuthorData } from "../types/Author.types";
 import { createAuthor, deleteAuthor, getAuthor, getAuthors, updateAuthor } from "../services/author_service";
 
@@ -60,16 +60,6 @@ export const show = async (req: Request, res: Response) => {
  * POST /authors
  */
 export const store = async (req: Request, res: Response) => {
-	// Check for any validation errors
-	const validationErrors = validationResult(req);
-	if (!validationErrors.isEmpty()) {
-		res.status(400).send({
-			status: "fail",
-			data: validationErrors.array(),
-		});
-		return;
-	};
-
     // Get only the validated data
 	const validatedData: CreateAuthorData = matchedData(req);
 
@@ -94,16 +84,6 @@ export const update = async (req: Request, res: Response) => {
 	const authorId = Number(req.params.authorId);
 	if (!authorId) {
 		res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
-		return;
-	}
-
-    // Check for any validation errors
-	const validationErrors = validationResult(req);
-	if (!validationErrors.isEmpty()) {
-		res.status(400).send({
-			status: "fail",
-			data: validationErrors.array(),
-		});
 		return;
 	}
 

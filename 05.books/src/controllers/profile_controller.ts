@@ -8,7 +8,7 @@ import Debug from "debug";
 import { getBooksByOwner } from "../services/book_service";
 import { linkBooksToUser, unlinkBookFromUser, updateUser } from "../services/user_service";
 import { UpdateUserData } from "../types/User.types";
-import { matchedData, validationResult } from "express-validator";
+import { matchedData } from "express-validator";
 import bcrypt from 'bcrypt';
 
 //skapa ny debug instance
@@ -58,16 +58,6 @@ export const updateProfile = async (req: Request, res: Response) => {
     };
 
     const userId = req.user.id;
-
-    // Check for any validation errors
-    const validationErrors = validationResult(req);
-    if (!validationErrors.isEmpty()) {
-        res.status(400).send({
-            status: "fail",
-            data: validationErrors.array(),
-        });
-        return;
-    }
 
     // Get only the validated data
     const validatedData: UpdateUserData = matchedData(req);

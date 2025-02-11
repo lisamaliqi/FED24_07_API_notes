@@ -2,6 +2,7 @@ import express from "express";
 import { body } from "express-validator";
 import { index, show, store, update, destroy } from "../controllers/author_controller";
 import { CreateAuthorRules, updateAuthorRules } from "../validations/author_rules";
+import { validateRequest } from "../middleware/validateRequest";
 
 // Create a new Author router
 const router = express.Router();
@@ -27,7 +28,7 @@ router.get("/:authorId", show);
  *
  * Create a author
  */
-router.post("/", CreateAuthorRules, store);
+router.post("/", CreateAuthorRules, validateRequest, store);
 
 
 /**
@@ -35,7 +36,7 @@ router.post("/", CreateAuthorRules, store);
  *
  * Update a author
  */
-router.patch("/:authorId", updateAuthorRules, update);
+router.patch("/:authorId", updateAuthorRules, validateRequest, update);
 
 
 /**

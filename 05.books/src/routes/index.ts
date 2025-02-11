@@ -80,7 +80,7 @@ router.post("/refresh", refresh);
  * POST /register
  */
 
-router.post('/register', createUserRules, register);
+router.post('/register', createUserRules, validateRequest, register);
 
 /**
  * Catch-all route handler

@@ -1,6 +1,7 @@
 import express from "express";
 import { index, show, store, update, destroy, addAuthor, removeAuthor } from "../controllers/book_controller";
 import { createBookRules, updateBookRules } from "../validations/book_rules";
+import { validateRequest } from "../middleware/validateRequest";
 
 // Create a new Book router
 const router = express.Router();
@@ -29,7 +30,7 @@ router.get('/:bookId', show);
  *
  * Create a book
  */
-router.post('/', createBookRules, store);
+router.post('/', createBookRules, validateRequest, store);
 
 
 
@@ -38,7 +39,7 @@ router.post('/', createBookRules, store);
  *
  * Update a book
  */
-router.patch('/:bookId', updateBookRules, update);
+router.patch('/:bookId', updateBookRules, validateRequest, update);
 
 
 

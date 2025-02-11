@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import prisma from "../prisma";
 import Debug from "debug";
-import { matchedData, validationResult } from "express-validator";
+import { matchedData } from "express-validator";
 import { CreatePublisherData, UpdatePublisherData } from "../types/Publisher.types";
 import { createPublisher, deletePublisher, getPublisher, getPublishers, linkPublisherToBook, unlinkBookFromPublisher, updatePublisher } from "../services/publisher_service";
 
@@ -59,15 +59,6 @@ export const show = async (req: Request, res: Response) => {
  * Create a publisher
  */
 export const store = async (req: Request, res: Response) => {
-    // Check for any validation errors
-	const validationErrors = validationResult(req);
-	if (!validationErrors.isEmpty()) {
-		res.status(400).send({
-			status: "fail",
-			data: validationErrors.array(),
-		});
-		return;
-	}
 	// Get only the validated data
 	const validatedData: CreatePublisherData = matchedData(req);
 
@@ -94,15 +85,6 @@ export const update = async (req: Request, res: Response) => {
 		return;
 	}
 
-    // Check for any validation errors
-	const validationErrors = validationResult(req);
-	if (!validationErrors.isEmpty()) {
-		res.status(400).send({
-			status: "fail",
-			data: validationErrors.array(),
-		});
-		return;
-	}
 	// Get only the validated data
 	const validatedData: UpdatePublisherData = matchedData(req);
 
