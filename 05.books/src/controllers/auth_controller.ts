@@ -3,18 +3,27 @@
  */
 import bcrypt from 'bcrypt';
 import Debug from "debug";
+import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import { matchedData, validationResult } from "express-validator";
 import { CreateAuthorData } from '../types/Author.types';
 import { CreateUserData } from '../types/User.types';
-import { createUser } from '../services/user_service';
+import { createUser, getUserByEmail } from '../services/user_service';
+import { JwtAccessTokenPayload } from "../types/JWT.types";
 
 // create new debug instance
 const debug = Debug('prisma-books:register_controller');
 
 // get environment variable 
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const SALT_ROUNDS =  Number(process.env.SALT_ROUNDS) || 10;
+
+interface LoginRequestBody {
+	email?: string;
+	password?: string;
+}
+
 
 /**
  * Log in a user
@@ -23,19 +32,58 @@ const SALT_ROUNDS =  Number(process.env.SALT_ROUNDS) || 10;
  */
 export const login = async (req: Request, res: Response) => {
 	// get (destructure) email and password from request body
+    const { email, password }: LoginRequestBody = req.body;
+
+    // check that user sent email and password
+	if (!email || !password) {
+		debug("User did not send email or password");
+		res.status(401).send({ status: "fail", data: { message: "Authorization required" }});
+		return;
+	};
+
 
 	// find user with email, otherwise bail 🛑
+    const user = await getUserByEmail(email);
+	if (!user) {
+		debug("User %s does not exist", email);
+		res.status(401).send({ status: "fail", data: { message: "Authorization required" }});
+		return;
+	};
+
 
 	// verify credentials against hash, otherwise bail 🛑
+    const password_correct = await bcrypt.compare(password, user.password);
+	if (!password_correct) {
+		debug("Password for user %s was not correct", email);
+		res.status(401).send({ status: "fail", data: { message: "Authorization required" }});
+		return;
+	};
+	debug("✅ Password for user %s was correct 🥳", email);
+
 
 	// construct jwt-payload
+    const payload: JwtAccessTokenPayload = {
+		sub: user.id,
+		name: user.name,
+		email: user.email,
+	};
+
 
 	// sign payload with access-token secret and get access-token
-    
+    if (!ACCESS_TOKEN_SECRET) {
+		debug("🛑🛑🛑 ACCESS_TOKEN_SECRET missing in environment");
+		res.status(500).send({ status: "error", message: "No access token secret defined" });
+		return;
+	};
+	const access_token = jwt.sign(payload, ACCESS_TOKEN_SECRET);
+
+
 	// respond with access-token
 	res.send({
 		status: "success",
-		data: null,
+		data: {
+			access_token,
+		},
 	});
 };
 
