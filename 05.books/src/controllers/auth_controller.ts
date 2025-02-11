@@ -10,7 +10,7 @@ import { handlePrismaError } from "../exceptions/prisma";
 import { matchedData, validationResult } from "express-validator";
 import { CreateAuthorData } from '../types/Author.types';
 import { CreateUserData } from '../types/User.types';
-import { createUser, getUserByEmail } from '../services/user_service';
+import { createUser, getUserByEmail, getUserById } from '../services/user_service';
 import { JwtAccessTokenPayload, JwtRefreshTokenPayload } from "../types/JWT.types";
 
 // create new debug instance
@@ -168,19 +168,44 @@ export const refresh = async (req: Request, res: Response) => {
 		res.status(401).send({ status: "fail", message: "Authorization denied" });
 		return;
 	};
-	// 3. Find user
+
+
+	// 3. Find user's name and email
+	const user = await getUserById(refresh_payload.id);
+
+	if (!user) {
+		debug("User with id %d does not exist", refresh_payload.id);
+		res.status(401).send({ status: "fail", data: { message: "Authorization required" }});
+		return;
+	};
 
 
 	// 4. Construct new access token payload
+    const access_payload: JwtAccessTokenPayload = {
+		id: user.id,
+		name: user.name,
+		email: user.email,
+	};
 
 
 	// 5. Sign payload with access token secret
+    if (!ACCESS_TOKEN_SECRET) {
+		debug("🛑🛑🛑 ACCESS_TOKEN_SECRET missing in environment");
+		res.status(500).send({ status: "error", message: "No access token secret defined" });
+		return;
+	};
+
+	const access_token = jwt.sign(access_payload, ACCESS_TOKEN_SECRET, {
+		expiresIn: ACCESS_TOKEN_LIFETIME,
+	});
 
 
 	// 6. Respond with the new access token
 	res.send({
 		status: "success",
-		data: null,
+		data: {
+			access_token,
+		},
 	});
 };
 

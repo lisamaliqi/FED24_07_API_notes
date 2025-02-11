@@ -20,7 +20,26 @@ export const getUserByEmail = async (email: string) => {
 };
 
 
+/**
+ * Get a User by ID
+ *
+ * @param id Id of user to get
+ */
+export const getUserById = (userId: number) => {
+	return prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+	});
+}
 
+
+
+/**
+ * Create a user
+ *
+ * @param data User data
+ */
 export const createUser = (data: CreateUserData) => {
     return prisma.user.create({
         data: data,
