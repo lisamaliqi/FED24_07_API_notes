@@ -11,7 +11,7 @@ import Debug from "debug";
 import http from "http";
 
 // Läs PORT så den startar från env filen alternativt default på 3000
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 // Create a new debug instance
 const debug = Debug("prisma-books:server");
