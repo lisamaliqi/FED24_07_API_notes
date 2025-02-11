@@ -5,7 +5,7 @@ import profileRouter from "./profile";
 import publisherRouter from "./publisher";
 import { login, register} from "../controllers/auth_controller"
 import { createUserRules } from "../validations/user_rules";
-import { basic } from "../middleware/auth/basic";
+import { validateAccessToken } from "../middleware/auth/jwt";
 
 
 // Create a new Root router
@@ -48,7 +48,7 @@ router.use("/books", bookRouter);
 
 
 //      Profile router
-router.use('/profile', basic, profileRouter);
+router.use('/profile', validateAccessToken, profileRouter);
 
 
 
