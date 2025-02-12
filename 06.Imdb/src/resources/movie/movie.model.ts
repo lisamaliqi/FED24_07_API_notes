@@ -6,7 +6,7 @@ export interface MovieDocument extends Document {
 	release_year?: number;
 };
 
-const MovieSchema: Schema = new Schema<MovieDocument>({
+const MovieSchema = new Schema<MovieDocument>({
 	title: {
 		type: Schema.Types.String,
 		required: true,

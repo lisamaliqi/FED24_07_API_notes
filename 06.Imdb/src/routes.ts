@@ -1,4 +1,5 @@
 import express from "express";
+import movieRouter from "./resources/movie/movie.router";
 const router = express.Router();
 
 
@@ -14,6 +15,12 @@ router.get("/", (req, res) => {
 		}
 	});
 });
+
+
+/**
+ * /movies
+ */
+router.use("/movies", movieRouter)
 
 
 /**
