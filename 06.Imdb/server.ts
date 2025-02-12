@@ -6,6 +6,7 @@ dotenv.config();
 import app from "./src/app";
 import Debug from "debug";
 import http from "http";
+import { connect } from "./src/database";
 
 // Read port to start server on from `.env`, otherwise default to port 3000
 const PORT = Number(process.env.PORT) || 3000;
@@ -22,10 +23,18 @@ const server = http.createServer(app);
 
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Connect to database and then listen on provided port, on all network interfaces.
  */
 
-server.listen(PORT);
+connect()
+	.then(() => {
+		// Start listening once we have a connection
+		server.listen(PORT);
+	})
+	.catch((err) => {
+		console.error(err);
+		process.exit(1);
+	});
 
 
 /**
