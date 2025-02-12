@@ -11,4 +11,11 @@ const router = express.Router();
 router.get("/", movieController.index);
 
 
+
+/**
+ * GET /movies/:movieId
+ */
+router.get("/:movieId", movieController.show);
+
+
 export default router;
