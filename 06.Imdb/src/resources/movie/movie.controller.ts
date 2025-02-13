@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { isValidObjectId } from "mongoose";
+import mongoose from "mongoose";
 import Debug from "debug";
 import { Movie } from "./movie.model";
 
@@ -43,7 +43,7 @@ export const show = async (req: Request, res: Response) => {
 	const movieId = req.params.movieId;
 
     // Check if provided ID is a valid ObjectId (does not guarantee that the document exists)
-	if (!isValidObjectId(movieId)) {
+	if (!mongoose.isValidObjectId(movieId)) {
 		res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
 		return;
 	}
@@ -94,6 +94,15 @@ export const store = async (req:Request, res: Response) => {
         });
 
     } catch (err) {
+        if (err instanceof mongoose.Error.ValidationError) {
+			debug("Validation failed when creating movie %o: %O", req.body, err);
+			res.status(400).send({
+				status: "fail",
+				data: err.errors,
+			});
+			return;
+		};
+
         debug("Error thrown when creating movie %s: %O", req.body, err);
 		res.status(500).send({
 			status: "error",

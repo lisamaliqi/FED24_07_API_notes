@@ -6,16 +6,21 @@ export interface MovieDocument extends Document {
 	release_year?: number;
 };
 
+const currentYear = new Date().getFullYear();
+
 const MovieSchema = new Schema<MovieDocument>({
 	title: {
-		type: Schema.Types.String,
+		type: String,
 		required: true,
 	},
 	runtime: {
-		type: Schema.Types.Int32,
+		type: Number,
+        min: [1, 'Need to have a positive runtime'],
 	},
 	release_year: {
-		type: Schema.Types.Int32,
+		type: Number,
+        min: [1888, 'Needs to be 1888 or later'],
+        max: [currentYear, 'Cannot be in the future'],
 	},
 });
 
