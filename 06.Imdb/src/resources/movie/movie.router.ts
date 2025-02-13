@@ -44,4 +44,15 @@ router.patch("/:movieId", movieController.update);
 
 
 
+
+/**
+ * DELETE /movies/:movieId
+ *
+ * Delete a movie
+ */
+
+router.delete("/:movieId", movieController.destroy);
+
+
+
 export default router;

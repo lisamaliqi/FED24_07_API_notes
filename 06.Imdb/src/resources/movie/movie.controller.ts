@@ -135,7 +135,7 @@ export const update = async (req: Request, res: Response) => {
             new: true,
             runValidators: true,
         });
-        
+
 		res.status(201).send({ 
             status: "success", 
             data: movie 
@@ -158,3 +158,43 @@ export const update = async (req: Request, res: Response) => {
 		});
     };
 };
+
+
+
+
+/**
+ * Delete a movie
+ */
+
+export const destroy = async (req: Request, res: Response) => {
+    const movieId = req.params.movieId;
+
+    // Check if provided ID is a valid ObjectId (does not guarantee that the document exists)
+	if (!mongoose.isValidObjectId(movieId)) {
+		res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
+		return;
+	};
+
+    try {
+        await Movie.findByIdAndDelete(movieId);
+
+		res.status(204).send();
+
+    } catch (err) {
+        if (err instanceof mongoose.Error.ValidationError) {
+			debug("Validation failed when deleting movie %o: %O", req.body, err);
+			res.status(400).send({
+				status: "fail",
+				data: err.errors,
+			});
+			return;
+		};
+
+        debug("Error thrown when deleting movie %s: %O", req.body, err);
+		res.status(500).send({
+			status: "error",
+			message: "Error thrown when deleting movie",
+		});
+    }
+};
+
