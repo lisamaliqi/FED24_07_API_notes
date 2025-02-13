@@ -36,13 +36,24 @@ const MovieSchema = new Schema<MovieDocument>({
     genres: {
         type: [String],
         default: [],
-        lowercase: true,
+        // lowercase: true,
+        set: function(genres: String[]) { //mappa igenom alla genres och gör alla bokstäver till lowercase
+            const lowerCaseGenres = genres.map(genre => {
+                return genre.toLocaleLowerCase();
+            });
+
+            return lowerCaseGenres;
+        },
     },
     watched: {
         type: Date,
         default() {
             return Date.now();
         },
+        set(timestamp: number) {
+            //konvertera timestamp till millisekunder
+            return timestamp * 1000;
+        }
     },
 });
 
