@@ -38,6 +38,7 @@ export const index = async (req: Request, res: Response) => {
 /**
  * Get a single movie
  */
+
 export const show = async (req: Request, res: Response) => {
 	const movieId = req.params.movieId;
 
@@ -74,4 +75,29 @@ export const show = async (req: Request, res: Response) => {
 			message: "Error thrown when finding movie",
 		});
 	};
+};
+
+
+
+/**
+ * Create a new movie
+ */
+
+export const store = async (req:Request, res: Response) => {
+    try {
+        //create and save a new movie
+        const movie = await Movie.create(req.body);
+
+        res.status(201).send({
+            status: "success",
+            data: movie,
+        });
+
+    } catch (err) {
+        debug("Error thrown when creating movie %s: %O", req.body, err);
+		res.status(500).send({
+			status: "error",
+			message: "Error thrown when finding movie",
+		});
+    }
 };
