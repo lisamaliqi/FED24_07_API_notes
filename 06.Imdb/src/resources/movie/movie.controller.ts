@@ -79,6 +79,7 @@ export const show = async (req: Request, res: Response) => {
 
 
 
+
 /**
  * Create a new movie
  */
@@ -109,4 +110,51 @@ export const store = async (req:Request, res: Response) => {
 			message: "Error thrown when creating movie",
 		});
     }
+};
+
+
+
+
+
+/**
+ * Update a movie
+ */
+
+export const update = async (req: Request, res: Response) => {
+    //hämta ut movieId från input fältet i postman men gör INTE om det till Number (pga i ett objekt med nummer och siffror, aka string)
+    const movieId = req.params.movieId;
+
+    // Check if provided ID is a valid ObjectId (does not guarantee that the document exists)
+	if (!mongoose.isValidObjectId(movieId)) {
+		res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
+		return;
+	};
+
+    try {
+		const movie = await Movie.findByIdAndUpdate(movieId, req.body, {
+            new: true,
+            runValidators: true,
+        });
+        
+		res.status(201).send({ 
+            status: "success", 
+            data: movie 
+        });
+
+    } catch (err) {
+        if (err instanceof mongoose.Error.ValidationError) {
+			debug("Validation failed when updating movie %o: %O", req.body, err);
+			res.status(400).send({
+				status: "fail",
+				data: err.errors,
+			});
+			return;
+		};
+
+        debug("Error thrown when updating movie %s: %O", req.body, err);
+		res.status(500).send({
+			status: "error",
+			message: "Error thrown when updating movie",
+		});
+    };
 };
