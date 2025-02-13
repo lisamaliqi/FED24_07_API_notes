@@ -97,7 +97,7 @@ export const store = async (req:Request, res: Response) => {
         debug("Error thrown when creating movie %s: %O", req.body, err);
 		res.status(500).send({
 			status: "error",
-			message: "Error thrown when finding movie",
+			message: "Error thrown when creating movie",
 		});
     }
 };
