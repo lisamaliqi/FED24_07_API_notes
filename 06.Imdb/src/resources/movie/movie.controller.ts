@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { isValidObjectId } from "mongoose";
 import Debug from "debug";
 import { Movie } from "./movie.model";
 
@@ -39,6 +40,12 @@ export const index = async (req: Request, res: Response) => {
  */
 export const show = async (req: Request, res: Response) => {
 	const movieId = req.params.movieId;
+
+    // Check if provided ID is a valid ObjectId (does not guarantee that the document exists)
+	if (!isValidObjectId(movieId)) {
+		res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
+		return;
+	}
 
 	try {
 		// Find a single movie
