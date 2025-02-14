@@ -136,6 +136,17 @@ export const update = async (req: Request, res: Response) => {
             runValidators: true,
         });
 
+        // If no movie was found, respond with 404
+		if (!movie) {
+			res.status(404).send({
+				status: "fail",
+				data: {
+					message: "Movie Not Found",
+				},
+			});
+			return;
+		};
+
 		res.status(201).send({ 
             status: "success", 
             data: movie 
