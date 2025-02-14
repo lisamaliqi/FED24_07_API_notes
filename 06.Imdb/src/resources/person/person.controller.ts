@@ -177,3 +177,59 @@ export const update = async (req: Request, res: Response) => {
         });
     };
 };
+
+
+
+
+
+/**
+ * Delete a person
+ */
+
+export const destroy = async (req: Request, res: Response) => {
+    const personId = req.params.personId;
+
+    // Check if provided ID is a valid ObjectId (does not guarantee that the document exists)
+    if (!mongoose.isValidObjectId(personId)) {
+        res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});
+        return;
+    };
+
+    try { 
+        //remove person from any movies they directed
+        await Movie.updateMany(
+            { director: personId },
+            { director: null }
+        );
+
+        //remove person from any movies they acted in
+        await Movie.updateMany(
+            { actors: personId },
+            { $pull: { actors: personId } } //plockar bort actorsId från actors arrayen
+        );
+
+        //delete a person
+        const person = await Person.findByIdAndDelete(personId);
+        
+        // If no person was found, respond with 404
+        if (!person) {
+            res.status(404).send({
+                status: "fail",
+                data: {
+                    message: "person Not Found",
+                },
+            });
+            return;
+        };
+
+        res.status(204).send();
+
+    } catch (err) {
+        debug("Error thrown when deleting person %s: %O", req.body, err);
+        res.status(500).send({
+            status: "error",
+            message: "Error thrown when deleting person",
+        });
+    }
+};
+

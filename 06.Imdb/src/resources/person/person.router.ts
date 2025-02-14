@@ -34,5 +34,15 @@ router.patch("/:personId", personController.update);
 
 
 
+/**
+ * DELETE /people/:personId
+ *
+ */
+
+router.delete("/:personId", personController.destroy);
+
+
+
+
 
 export default router;
