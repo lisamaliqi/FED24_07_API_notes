@@ -187,20 +187,22 @@ export const destroy = async (req: Request, res: Response) => {
 	};
 
     try {
-        await Movie.findByIdAndDelete(movieId);
-
-		res.status(204).send();
-
-    } catch (err) {
-        if (err instanceof mongoose.Error.ValidationError) {
-			debug("Validation failed when deleting movie %o: %O", req.body, err);
-			res.status(400).send({
+        const movie = await Movie.findByIdAndDelete(movieId);
+        
+        // If no movie was found, respond with 404
+		if (!movie) {
+			res.status(404).send({
 				status: "fail",
-				data: err.errors,
+				data: {
+					message: "Movie Not Found",
+				},
 			});
 			return;
 		};
 
+		res.status(204).send();
+
+    } catch (err) {
         debug("Error thrown when deleting movie %s: %O", req.body, err);
 		res.status(500).send({
 			status: "error",
