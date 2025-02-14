@@ -26,6 +26,13 @@ router.get("/:personId", personController.show);
 router.post("/", personController.store);
 
 
+/**
+ * PATCH /people
+ */
+
+router.patch("/:personId", personController.update);
+
+
 
 
 export default router;
