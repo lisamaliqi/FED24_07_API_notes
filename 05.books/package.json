@@ -1,9 +1,12 @@
 {
   "name": "05.books",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "dev": "cross-env DEBUG=prisma-books:* nodemon server.ts"
+    "build": "env-cmd --silent bash scripts/build.sh",
+    "build-app": "tsc",
+    "dev": "cross-env DEBUG=prisma-books:* nodemon server.ts",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +19,7 @@
     "@types/jsonwebtoken": "^9.0.8",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.10",
+    "env-cmd": "^10.1.0",
     "nodemon": "^3.1.9",
     "prisma": "^6.2.1",
     "ts-node": "^10.9.2",
