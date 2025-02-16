@@ -1,15 +1,13 @@
 /**
- * Extend types inside the Express namespace
+ * Extend types inside the Express namespace using module augmentation
  */
 
 import { AuthenticatedUser } from "../Auth.types";
 
 
 
-declare global {
-    namespace Express {
-        export interface Request {
-            user?: AuthenticatedUser;
-        }
+declare module "express-serve-static-core" {
+	interface Request {
+		user?: AuthenticatedUser;
     }
 }

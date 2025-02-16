@@ -24,11 +24,7 @@ export const validateAccessToken = async (req: Request, res: Response, next: Nex
 		token = extractAndValidateAuthHeader(req, "Bearer");
 
 	} catch (err) {
-		res.status(401).send({ 
-            status: "fail", 
-            data: { 
-                message: "Authorization header is missing or not of the expected type" 
-            }});
+		res.status(401).send({ status: "fail", data: { message: err }});
 
 		return;
 	};

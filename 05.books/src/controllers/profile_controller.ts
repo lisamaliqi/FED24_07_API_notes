@@ -3,13 +3,14 @@
  */
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
-import prisma from "../prisma";
 import Debug from "debug";
 import { getBooksByOwner } from "../services/book_service";
 import { linkBooksToUser, unlinkBookFromUser, updateUser } from "../services/user_service";
 import { UpdateUserData } from "../types/User.types";
 import { matchedData } from "express-validator";
 import bcrypt from 'bcrypt';
+import { BookId } from '../types/Book.types';
+import { TypedRequestBody } from '../types/Request.types';
 
 //skapa ny debug instance
 const debug = Debug('prisma-books:profile_controller');
@@ -123,7 +124,7 @@ export const getBooks = async (req: Request, res: Response) => {
  *
  * POST /profile/books
  */
-export const addBooks = async (req: Request, res: Response) => {
+export const addBooks = async (req: TypedRequestBody<BookId | BookId[]>, res: Response) => {
 	// Om någon vill ta bort authentication från routen för denna metod? ERRORORORORORO
     if (!req.user) {
         throw new Error('Trying to access authenticated user but none exists. Did you remove authetication from this route????')
@@ -177,7 +178,7 @@ export const removeBook = async (req: Request, res: Response) => {
     
     
         } catch (err) {
-            debug('error when trying to unlinks book %d to authenticated users %d: ', req.body, userId, err);
+            debug("Error when trying to unlink Book %d from authenticated user %d", bookId, userId, err);
             const { status_code, body } = handlePrismaError(err);
             res.status(status_code).send(body);
         };

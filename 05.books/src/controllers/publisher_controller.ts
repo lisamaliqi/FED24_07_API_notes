@@ -3,7 +3,6 @@
  */
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
-import prisma from "../prisma";
 import Debug from "debug";
 import { matchedData } from "express-validator";
 import { CreatePublisherData, UpdatePublisherData } from "../types/Publisher.types";

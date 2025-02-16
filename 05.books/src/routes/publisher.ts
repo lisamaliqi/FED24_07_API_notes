@@ -1,8 +1,5 @@
 import express from "express";
-import prisma from "../prisma";
-import { handlePrismaError } from "../exceptions/prisma";
 import { destroy, index, show, store, update, linkToBook, unlinkFromBook } from "../controllers/publisher_controller";
-import { describe } from "node:test";
 import { createPublisherRules, updatePublisherRules } from "../validations/publisher_rules";
 import { validateRequest } from "../middleware/validateRequest";
 

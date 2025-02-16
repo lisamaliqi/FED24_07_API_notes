@@ -8,7 +8,6 @@ import { StringValue } from "ms";
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
 import { matchedData } from "express-validator";
-import { CreateAuthorData } from '../types/Author.types';
 import { CreateUserData } from '../types/User.types';
 import { createUser, getUserByEmail, getUserById } from '../services/user_service';
 import { JwtAccessTokenPayload, JwtRefreshTokenPayload } from "../types/JWT.types";
@@ -122,7 +121,7 @@ export const refresh = async (req: Request, res: Response) => {
 
 	// 1. Get refresh token from cookie 🍪
 	debug("🍪 Cookies: %o", req.cookies);
-	const refresh_token: string | undefined = req.cookies.refresh_token;
+	const refresh_token = (req.cookies as { refresh_token?: string }).refresh_token;
 
 	if (!refresh_token) {
 		debug("No refresh token found in cookies 😢");
@@ -237,35 +236,3 @@ export const register = async (req: Request, res: Response) => {
     };
 };
 
-
-/**
- * Get a single resource
- *
- * GET /resources/:resourceId
- */
-export const show = async (req: Request, res: Response) => {
-}
-
-/**
- * Create a resource
- *
- * POST /resources
- */
-export const store = async (req: Request, res: Response) => {
-}
-
-/**
- * Update a resource
- *
- * PATCH /resources/:resourceId
- */
-export const update = async (req: Request, res: Response) => {
-}
-
-/**
- * Delete a resource
- *
- * DELETE /resources/:resourceId
- */
-export const destroy = async (req: Request, res: Response) => {
-}

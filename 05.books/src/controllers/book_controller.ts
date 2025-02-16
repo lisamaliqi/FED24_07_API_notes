@@ -3,11 +3,12 @@
  */
 import { Request, Response } from "express";
 import { handlePrismaError } from "../exceptions/prisma";
-import prisma from "../prisma";
+import { AuthorId } from "../types/Author.types";
 import Debug from "debug";
 import { matchedData } from "express-validator";
 import { CreateBookData, UpdateBookData } from "../types/Book.types";
 import { createBook, deleteBook, getBook, getBooks, linkBookToAuthor, unlinkAuthorFromBook, updateBook } from "../services/book_service";
+import { TypedRequestParamsBody } from "../types/Request.types";
 
 // Create a new debug instance
 const debug = Debug("prisma-books:book_controller");
@@ -132,7 +133,7 @@ export const destroy = async (req: Request, res: Response) => {
     };
 
     try {
-        const book = await deleteBook(bookId);
+        await deleteBook(bookId);
         res.status(204).send();
 
     } catch (err) {
@@ -154,7 +155,7 @@ export const destroy = async (req: Request, res: Response) => {
  *
  * Link book to author(s)
  */
-export const addAuthor = async (req: Request, res: Response) => {
+export const addAuthor = async (req: TypedRequestParamsBody<{ bookId: number }, AuthorId | AuthorId[]>, res: Response) => {
     const bookId = Number(req.params.bookId);
     if (!bookId) {
         res.status(400).send({ status: "fail", data: { message: "That is not a valid ID" }});

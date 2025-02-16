@@ -21,11 +21,7 @@ export const basic = async (req: Request, res: Response, next: NextFunction) => 
 		base64Payload = extractAndValidateAuthHeader(req, "Basic");
 
 	} catch (err) {
-		res.status(401).send({ 
-            status: "fail", 
-            data: { 
-                message: "Authorization header is missing or not of the expected type" 
-            }});
+		res.status(401).send({ status: "fail", data: { message: err }});
 
         return;
     };

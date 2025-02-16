@@ -3,7 +3,6 @@
  */
 
 import { body } from "express-validator";
-import prisma from "../prisma";
 import { getUserByEmail } from "../services/user_service";
 
 /**

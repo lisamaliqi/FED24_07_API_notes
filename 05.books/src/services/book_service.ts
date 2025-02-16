@@ -1,11 +1,9 @@
 /**
  * Author Service
  */
-import { Request } from "express-validator/lib/base";
 import prisma from "../prisma";
 import { CreateBookData, UpdateBookData } from "../types/Book.types";
 import { AuthorId } from "../types/Author.types";
-import { userInfo } from "node:os";
 
 /**
  * Get all books

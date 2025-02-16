@@ -1,5 +1,4 @@
 import express from "express";
-import { body } from "express-validator";
 import { index, show, store, update, destroy } from "../controllers/author_controller";
 import { CreateAuthorRules, updateAuthorRules } from "../validations/author_rules";
 import { validateRequest } from "../middleware/validateRequest";

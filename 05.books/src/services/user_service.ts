@@ -149,4 +149,6 @@ export const unlinkBookFromUser = async (userId: number, bookId: number) => {
             },
         },
     });
+
+    return user.books;
 };

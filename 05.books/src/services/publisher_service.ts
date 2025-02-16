@@ -1,7 +1,6 @@
 /**
  * Publisher Service
  */
-import { Request } from "express-validator/lib/base";
 import prisma from "../prisma";
 import { CreatePublisherData, UpdatePublisherData } from "../types/Publisher.types";
 import { BookId } from "../types/Book.types";

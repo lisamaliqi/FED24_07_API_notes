@@ -1,5 +1,4 @@
 import express from "express";
-import { index, show, store, update, destroy } from "../controllers/_controller";
 import { addBooks, getBooks, getProfile, removeBook, updateProfile } from "../controllers/profile_controller";
 import { updateUserRules } from "../validations/user_rules";
 import { validateRequest } from "../middleware/validateRequest";
