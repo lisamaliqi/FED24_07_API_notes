@@ -8,6 +8,7 @@ import Debug from "debug";
 import http from "http";
 import { Server } from "socket.io";
 import { handleConnection } from "./src/controllers/socket_controller";
+import { ClientToServerEvents, ServerToClientEvents } from "@shared/types/SocketEvents.types";
 
 // Read port to start server on from `.env`, otherwise default to port 3000
 const PORT = Number(process.env.PORT) || 3000;
@@ -19,7 +20,8 @@ const debug = Debug("chat:server");
 * Create HTTP and Socket.IO server.
  */
 const httpServer = http.createServer(app);
-const io = new Server(httpServer, {
+
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
 	cors: {
 		credentials: true,
 		origin: "*",
