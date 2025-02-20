@@ -133,8 +133,22 @@ loginFormEl.addEventListener("submit", (e) => {
 	// Set username
 	username = trimmedUsername;
 
-	// Show chat view
-	showChatView();
+	// Emit `userJoinRequest`-event to server and
+	// WAIT for acknowledgement
+	// BEFORE showing chat view
+	socket.emit("userJoinRequest", username, (success) => {
+		// This will only be executed once the server has responded
+		console.log("Join was successful?", success);
+
+		if (!success) {
+			alert("NO ACCESS 4 U!");
+			return;
+		}
+
+		// Show chat view
+		showChatView();
+	});
+	console.log("Emitted 'userJoinRequest' event to server", username);
 });
 
 
