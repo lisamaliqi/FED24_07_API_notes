@@ -11,7 +11,14 @@ console.log("SOCKET_HOST:", SOCKET_HOST);
 // Connect to Socket.IO Server
 const socket = io(SOCKET_HOST);
 
+
 // Listen for when connection is established
 socket.on("connect", () => {
 	console.log("💥 Connected to the server", socket.id);
+});
+
+
+// Listen for when server got tired of us
+socket.on("disconnect", () => {
+	console.log("🥺 Got disconnected from the server");
 });

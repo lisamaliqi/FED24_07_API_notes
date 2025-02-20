@@ -7,6 +7,7 @@ import app from "./src/app";
 import Debug from "debug";
 import http from "http";
 import { Server } from "socket.io";
+import { handleConnection } from "./src/controllers/socket_controller";
 
 // Read port to start server on from `.env`, otherwise default to port 3000
 const PORT = Number(process.env.PORT) || 3000;
@@ -29,8 +30,8 @@ const io = new Server(httpServer, {
  * Handle incoming Socket.IO connection
  */
 io.on("connection", (socket) => {
-	// Yay someone connected to me
-	debug("Yay someone connected!!!!!!", socket.id);
+	// Pass the connection over to socket-controller
+	handleConnection(socket);
 });
 
 /**
