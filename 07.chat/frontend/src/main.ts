@@ -18,12 +18,17 @@ const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOS
  * Functions
  */
 
-const addMessageToChat = (payload: ChatMessageData) => {
+const addMessageToChat = (payload: ChatMessageData, ownMessage = false) => {
 	// Create a new LI element
 	const msgEl = document.createElement("li");
 
 	// Set CSS-classes
 	msgEl.classList.add("message");
+
+    // If it's our own message, add the `own-message` class
+	if (ownMessage) {
+		msgEl.classList.add("own-message");
+	};
 
 	// Set text content
 	msgEl.textContent = payload.content;
@@ -91,7 +96,7 @@ messageFormEl.addEventListener("submit", (e) => {
 	console.log("Emitted 'sendChatMessage' event to server", payload);
 
     // Add our own message to the chat
-	addMessageToChat(payload);
+	addMessageToChat(payload, true);
 
 	// Clear input field
 	messageEl.value = "";
