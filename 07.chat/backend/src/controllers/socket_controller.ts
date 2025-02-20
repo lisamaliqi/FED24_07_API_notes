@@ -13,14 +13,16 @@ const debug = Debug('chat:socket_controller');
 export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToClientEvents>) => {
 	debug("🙋 A user connnected", socket.id);
 
+    // Listen for incoming chat messages
+	socket.on("sendChatMessage", (payload) => {
+		debug("📨 New chat message", socket.id, payload);
+
+		// Broadcast message to everyone connected EXCEPT the sender
+		socket.broadcast.emit("chatMessage", payload);
+	});
+
 	// Handle a user disconnecting
 	socket.on("disconnect", () => {
 		debug("👋 A user disconnected", socket.id);
 	});
-
-    // Say hello to the user
-	setTimeout(() => {
-		socket.emit("hello");
-		debug("🤩 Said hello to the nice user", socket.id);
-	}, 3000);
 };
