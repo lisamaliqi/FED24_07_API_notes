@@ -6,9 +6,27 @@ import { ChatMessageData, ClientToServerEvents, ServerToClientEvents } from "../
 const SOCKET_HOST = import.meta.env.VITE_SOCKET_HOST as string;
 console.log("SOCKET_HOST:", SOCKET_HOST);
 
+
+
+// Forms
+const loginFormEl = document.querySelector("#login-form") as HTMLFormElement;
+const loginUsernameInputEl = document.querySelector("#username") as HTMLInputElement;
 const messageEl = document.querySelector("#message") as HTMLInputElement;
 const messageFormEl = document.querySelector("#message-form") as HTMLFormElement;
+
+
+// Lists
 const messagesEl = document.querySelector("#messages") as HTMLDivElement;
+
+
+// Views
+const chatView = document.querySelector("#chat-wrapper") as HTMLDivElement;
+const loginView = document.querySelector("#login-wrapper") as HTMLDivElement;
+
+
+// User Details
+let username: string | null = null;
+
 
 // Connect to Socket.IO Server
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOST);
@@ -37,6 +55,19 @@ const addMessageToChat = (payload: ChatMessageData, ownMessage = false) => {
 	messagesEl.appendChild(msgEl);
 };
 
+
+// Show chat view
+const showChatView = () => {
+	loginView.classList.add("hide");
+	chatView.classList.remove("hide");
+};
+
+
+// Show login view
+const showLoginView = () => {
+	chatView.classList.add("hide");
+	loginView.classList.remove("hide");
+};
 
 
 
@@ -73,6 +104,27 @@ socket.on("chatMessage", (payload) => {
 /**
  * DOM Event Listeners
  */
+
+// Save username and show chat
+loginFormEl.addEventListener("submit", (e) => {
+	e.preventDefault();
+
+	// 💇
+	const trimmedUsername = loginUsernameInputEl.value.trim();
+
+	// If no username, no join
+	if (!trimmedUsername) {
+		alert("No username? No chat 4 you!");
+		return;
+	}
+
+	// Set username
+	username = trimmedUsername;
+
+	// Show chat view
+	showChatView();
+});
+
 
 // Send message to the server when form is submitted
 messageFormEl.addEventListener("submit", (e) => {
