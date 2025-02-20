@@ -28,9 +28,9 @@ const io = new Server(httpServer, {
 /**
  * Handle incoming Socket.IO connection
  */
-io.on("connection", () => {
+io.on("connection", (socket) => {
 	// Yay someone connected to me
-	debug("Yayy someone connected!!!!!!");
+	debug("Yay someone connected!!!!!!", socket.id);
 });
 
 /**
