@@ -8,11 +8,38 @@ console.log("SOCKET_HOST:", SOCKET_HOST);
 
 const messageEl = document.querySelector("#message") as HTMLInputElement;
 const messageFormEl = document.querySelector("#message-form") as HTMLFormElement;
-// const messagesEl = document.querySelector("#messages") as HTMLDivElement;
+const messagesEl = document.querySelector("#messages") as HTMLDivElement;
 
 // Connect to Socket.IO Server
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOST);
 
+
+/**
+ * Functions
+ */
+
+const addMessageToChat = (payload: ChatMessageData) => {
+	// Create a new LI element
+	const msgEl = document.createElement("li");
+
+	// Set CSS-classes
+	msgEl.classList.add("message");
+
+	// Set text content
+	msgEl.textContent = payload.content;
+
+	// Append LI to messages list
+	messagesEl.appendChild(msgEl);
+};
+
+
+
+
+
+
+/**
+ * Socket Event Listeners
+ */
 
 // Listen for when connection is established
 socket.on("connect", () => {
@@ -30,9 +57,17 @@ socket.on("disconnect", () => {
 // Listen for new chat messages
 socket.on("chatMessage", (payload) => {
 	console.log("📨 YAY SOMEONE WROTE SOMETHING!!!!!!!", payload);
+    addMessageToChat(payload);
 });
 
 
+
+
+
+
+/**
+ * DOM Event Listeners
+ */
 
 // Send message to the server when form is submitted
 messageFormEl.addEventListener("submit", (e) => {
@@ -54,6 +89,9 @@ messageFormEl.addEventListener("submit", (e) => {
 	// 📮 Send (emit) the message to the server
 	socket.emit("sendChatMessage", payload);
 	console.log("Emitted 'sendChatMessage' event to server", payload);
+
+    // Add our own message to the chat
+	addMessageToChat(payload);
 
 	// Clear input field
 	messageEl.value = "";
