@@ -111,6 +111,24 @@ const showLoginView = () => {
 
 
 
+/**
+ * Socket Handlers
+ */
+
+const userJoinRequestCallback = (success: boolean) => {
+    // This will only be executed once the server has responded
+    console.log("Join was successful?", success);
+
+    if (!success) {
+        alert("NO ACCESS 4 U!");
+        return;
+    }
+
+    // Show chat view
+    showChatView();
+};
+
+
 
 
 /**
@@ -126,8 +144,19 @@ socket.on("connect", () => {
 // Listen for when server got tired of us
 socket.on("disconnect", () => {
 	console.log("🥺 Got disconnected from the server");
+    addNoticeToChat('Youve been disconnected from the server');
 });
 
+// Listen for when we're reconnected (our own fault or servers fault)
+socket.io.on("reconnect", () => {
+    console.log("🔌 Reconnected to the server");
+
+    // emit userJoinRequest event but ONLY if we were in the chat previously
+    if (username) {
+        socket.emit("userJoinRequest", username, userJoinRequestCallback);
+        addNoticeToChat("You're reconnected!");
+    };
+});
 
 
 // Listen for new chat messages
@@ -137,7 +166,7 @@ socket.on("chatMessage", (payload) => {
 });
 
 
-// Listen for when a new user houns the chat
+// Listen for when a new user joins the chat
 socket.on("userJoined", (username, timestamp) => {
     console.log("👶🏽 a new user joined the chat", username, timestamp);
     addNoticeToChat(`${username} has joined the chat`, timestamp);
@@ -169,18 +198,7 @@ loginFormEl.addEventListener("submit", (e) => {
 	// Emit `userJoinRequest`-event to server and
 	// WAIT for acknowledgement
 	// BEFORE showing chat view
-	socket.emit("userJoinRequest", username, (success) => {
-		// This will only be executed once the server has responded
-		console.log("Join was successful?", success);
-
-		if (!success) {
-			alert("NO ACCESS 4 U!");
-			return;
-		}
-
-		// Show chat view
-		showChatView();
-	});
+	socket.emit("userJoinRequest", username, userJoinRequestCallback);
 	console.log("Emitted 'userJoinRequest' event to server", username);
 });
 
