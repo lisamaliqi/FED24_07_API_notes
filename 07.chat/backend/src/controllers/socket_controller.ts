@@ -29,6 +29,9 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 		// We probably should check if the username is already in use
 		// and if so, deny access
 		callback(true);  // response
+
+        // Broadcast to everyone that a new user has joined
+        socket.broadcast.emit("userJoined", username, Date.now());
 	});
 
 	// Handle a user disconnecting

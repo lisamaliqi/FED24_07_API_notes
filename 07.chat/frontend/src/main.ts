@@ -36,6 +36,7 @@ const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOS
  * Functions
  */
 
+// add message to chat
 const addMessageToChat = (payload: ChatMessageData, ownMessage = false) => {
 	// Create a new LI element
 	const msgEl = document.createElement("li");
@@ -65,6 +66,33 @@ const addMessageToChat = (payload: ChatMessageData, ownMessage = false) => {
 
 	// Append LI to messages list
 	messagesEl.appendChild(msgEl);
+};
+
+
+// add notice to chat
+const addNoticeToChat = (msg: string, timestamp?: number) => {
+    if(!timestamp) {
+        timestamp = Date.now();
+    };
+
+	// Create a new LI element
+	const noticeEl = document.createElement("li");
+
+	// Set CSS-classes
+	noticeEl.classList.add("notice");
+
+    // Get human readable time
+	const time = new Date(timestamp).toLocaleTimeString();  // "13:37:00"
+
+	// Set text content
+	noticeEl.innerHTML = 
+		`
+			<span class="content">${msg}</span>
+            <span class="time">${time}</span>
+		`;
+
+	// Append LI to messages list
+	messagesEl.appendChild(noticeEl);
 };
 
 
@@ -109,6 +137,11 @@ socket.on("chatMessage", (payload) => {
 });
 
 
+// Listen for when a new user houns the chat
+socket.on("userJoined", (username, timestamp) => {
+    console.log("👶🏽 a new user joined the chat", username, timestamp);
+    addNoticeToChat(`${username} has joined the chat`, timestamp);
+});
 
 
 
