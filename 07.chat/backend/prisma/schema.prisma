@@ -7,9 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Message {
-  id        String   @id @default(cuid()) @map("_id") @db.ObjectId
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Room {
+    id      String   @id @default(auto()) @map("_id") @db.ObjectId
+    name    String   @unique
+
+    users   User[]
+}
+
+model User {
+    id          String  @id @map("_id")
+    username    String 
+    roomId      String  @db.ObjectId
+
+    room        Room    @relation(fields: [roomId], references: [id])
 }
