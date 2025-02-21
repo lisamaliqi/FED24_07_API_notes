@@ -4,6 +4,7 @@
 import Debug from "debug";
 import { Server, Socket } from "socket.io";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/types/SocketEvents.types";
+import prisma from "../prisma";
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller');
@@ -16,6 +17,23 @@ export const handleConnection = (
     io: Server<ClientToServerEvents, ServerToClientEvents>
 ) => {
 	debug("🙋 A user connnected", socket.id);
+
+    // Listen for room list request
+    socket.on('getRoomList', async (callback) => {
+        debug('🏠Got request for rooms!');
+
+        const rooms = await prisma.room.findMany({
+            orderBy: {
+                name: 'asc', //sortera i bokstavsordning
+            },
+        });
+        debug('Found the rooms, sending list of rooms %o', rooms);
+
+        // Send list of rooms as acknowledgement of the event 
+        setTimeout(() => {
+            callback(rooms);
+        }, 1500);
+    }); 
 
     // Listen for incoming chat messages
 	socket.on("sendChatMessage", (payload) => {

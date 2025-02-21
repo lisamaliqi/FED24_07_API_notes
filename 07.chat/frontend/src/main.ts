@@ -105,6 +105,16 @@ const showChatView = () => {
 
 // Show login view
 const showLoginView = () => {
+    // request a list of rooms from the server
+    // once we get them, populate the `<select>` element with the rooms
+    // after that, enable the "connect" button
+    console.log('Requesting rooms...');
+    socket.emit('getRoomList', (rooms) => {
+        //we got rooms
+        console.log('Yay, our rooms!!', rooms);
+        
+    });
+    
 	chatView.classList.add("hide");
 	loginView.classList.remove("hide");
 };
@@ -138,6 +148,9 @@ const userJoinRequestCallback = (success: boolean) => {
 // Listen for when connection is established
 socket.on("connect", () => {
 	console.log("💥 Connected to the server", socket.id);
+
+    //show login view
+    showLoginView();
 });
 
 
