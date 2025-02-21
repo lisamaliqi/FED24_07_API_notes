@@ -13,7 +13,6 @@ const debug = Debug('chat:socket_controller');
 // Handle a user connecting
 export const handleConnection = (
     socket: Socket<ClientToServerEvents, ServerToClientEvents>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     io: Server<ClientToServerEvents, ServerToClientEvents>
 ) => {
 	debug("🙋 A user connnected", socket.id);
@@ -40,7 +39,7 @@ export const handleConnection = (
 		debug("📨 New chat message", socket.id, payload);
 
 		// Broadcast message to everyone connected EXCEPT the sender
-		socket.broadcast.emit("chatMessage", payload);
+		socket.to(payload.roomId).emit("chatMessage", payload);
 	});
 
     // Listen for a user join request

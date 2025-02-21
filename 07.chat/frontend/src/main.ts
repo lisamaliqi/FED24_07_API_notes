@@ -240,7 +240,7 @@ messageFormEl.addEventListener("submit", (e) => {
 	const trimmedMessage = messageEl.value.trim();
 
 	// If no message, no send
-	if (!trimmedMessage || !username) {
+	if (!trimmedMessage || !username || !roomId) {
 		return;
 	};
 
@@ -248,6 +248,7 @@ messageFormEl.addEventListener("submit", (e) => {
 	const payload: ChatMessageData = {
 		content: trimmedMessage,
         timestamp: Date.now(),
+        roomId,
         username,
 	};
 
