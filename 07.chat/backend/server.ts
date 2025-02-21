@@ -33,7 +33,7 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
  */
 io.on("connection", (socket) => {
 	// Pass the connection over to socket-controller
-	handleConnection(socket);
+	handleConnection(socket, io);
 });
 
 /**

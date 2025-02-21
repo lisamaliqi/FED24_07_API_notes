@@ -144,7 +144,7 @@ socket.on("connect", () => {
 // Listen for when server got tired of us
 socket.on("disconnect", () => {
 	console.log("🥺 Got disconnected from the server");
-    addNoticeToChat('Youve been disconnected from the server');
+    addNoticeToChat('You have been disconnected from the server');
 });
 
 // Listen for when we're reconnected (our own fault or servers fault)

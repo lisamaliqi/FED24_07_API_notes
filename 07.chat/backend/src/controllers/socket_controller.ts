@@ -2,7 +2,7 @@
  * Socket Controller
  */
 import Debug from "debug";
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/types/SocketEvents.types";
 
 // Create a new debug instance
@@ -10,7 +10,11 @@ const debug = Debug('chat:socket_controller');
 
 
 // Handle a user connecting
-export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToClientEvents>) => {
+export const handleConnection = (
+    socket: Socket<ClientToServerEvents, ServerToClientEvents>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    io: Server<ClientToServerEvents, ServerToClientEvents>
+) => {
 	debug("🙋 A user connnected", socket.id);
 
     // Listen for incoming chat messages
