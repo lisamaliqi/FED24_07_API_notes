@@ -44,16 +44,19 @@ export const handleConnection = (
 	});
 
     // Listen for a user join request
-	socket.on("userJoinRequest", (username, callback) => {  // request
-		debug("👶🏽 User %s from socket %s wants to join the chat", username, socket.id);
+	socket.on("userJoinRequest", (username, roomId, callback) => {  // request
+		debug("👶🏽 User %s from socket %s wants to join room %s", username, socket.id, roomId);
+
+        // Join room `roomId`
+        socket.join(roomId);
 
 		// Always let the user in (for now 😇)
 		// We probably should check if the username is already in use
 		// and if so, deny access
 		callback(true);  // response
 
-        // Broadcast to everyone that a new user has joined
-        socket.broadcast.emit("userJoined", username, Date.now());
+        // Broadcast to everyone in the room (including ourselves) that a user has joined
+        io.to(roomId).emit("userJoined", username, Date.now());
 	});
 
 	// Handle a user disconnecting

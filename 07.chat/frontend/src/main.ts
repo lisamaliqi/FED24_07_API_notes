@@ -11,6 +11,8 @@ console.log("SOCKET_HOST:", SOCKET_HOST);
 // Forms
 const loginFormEl = document.querySelector("#login-form") as HTMLFormElement;
 const loginUsernameInputEl = document.querySelector("#username") as HTMLInputElement;
+const loginConnectBtnEl = document.querySelector('#connectBtn') as HTMLButtonElement;
+const loginRoomSelectEl = document.querySelector('#room') as HTMLSelectElement;
 const messageEl = document.querySelector("#message") as HTMLInputElement;
 const messageFormEl = document.querySelector("#message-form") as HTMLFormElement;
 
@@ -25,6 +27,7 @@ const loginView = document.querySelector("#login-wrapper") as HTMLDivElement;
 
 
 // User Details
+let roomId: string | null = null;
 let username: string | null = null;
 
 
@@ -105,12 +108,9 @@ const showChatView = () => {
 
 // Show login view
 const showLoginView = () => {
-    const connectBtnEl = document.querySelector('#connectBtn') as HTMLButtonElement;
-    const roomSelectEl = document.querySelector('#room') as HTMLSelectElement;
-
     // Disable 'Connect' button and clear room-list
-    connectBtnEl.disabled = true;
-    roomSelectEl.innerHTML = `<option selected>Loading...</option>`;
+    loginConnectBtnEl.disabled = true;
+    loginRoomSelectEl.innerHTML = `<option selected>Loading...</option>`;
 
 
     // request a list of rooms from the server
@@ -122,12 +122,12 @@ const showLoginView = () => {
         console.log('Yay, our rooms!!', rooms);
 
         // Update room list with option for each room
-        roomSelectEl.innerHTML = rooms
+        loginRoomSelectEl.innerHTML = rooms
             .map(room => `<option value="${room.id}">${room.name}</option>`)
             .join('');
 
         // Enable connect button once we have a list of rooms
-        connectBtnEl.disabled = false;
+        loginConnectBtnEl.disabled = false;
 
         
     });
@@ -182,8 +182,8 @@ socket.io.on("reconnect", () => {
     console.log("🔌 Reconnected to the server");
 
     // emit userJoinRequest event but ONLY if we were in the chat previously
-    if (username) {
-        socket.emit("userJoinRequest", username, userJoinRequestCallback);
+    if (username && roomId) {
+        socket.emit("userJoinRequest", username, roomId, userJoinRequestCallback);
         addNoticeToChat("You're reconnected!");
     };
 });
@@ -213,23 +213,22 @@ socket.on("userJoined", (username, timestamp) => {
 loginFormEl.addEventListener("submit", (e) => {
 	e.preventDefault();
 
-	// 💇
-	const trimmedUsername = loginUsernameInputEl.value.trim();
+	//  Get username and roomId
+	username = loginUsernameInputEl.value.trim();
+    roomId = loginRoomSelectEl.value;
 
-	// If no username, no join
-	if (!trimmedUsername) {
-		alert("No username? No chat 4 you!");
+
+	// If no username or room, no join
+	if (!username || !roomId) {
+		alert("No username or room? No chat 4 you!");
 		return;
-	}
-
-	// Set username
-	username = trimmedUsername;
+	};
 
 	// Emit `userJoinRequest`-event to server and
 	// WAIT for acknowledgement
 	// BEFORE showing chat view
-	socket.emit("userJoinRequest", username, userJoinRequestCallback);
-	console.log("Emitted 'userJoinRequest' event to server", username);
+	socket.emit("userJoinRequest", username, roomId, userJoinRequestCallback);
+	console.log("Emitted 'userJoinRequest' event to server", username, roomId);
 });
 
 
