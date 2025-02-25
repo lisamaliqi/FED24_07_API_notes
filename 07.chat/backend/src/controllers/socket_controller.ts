@@ -65,18 +65,40 @@ export const handleConnection = (
         // Join room `roomId`
         socket.join(roomId);
 
+        // 1. Create user, set id to socket.id and roomId to the roomId they want to join
+        await prisma.user.create({
+            data: {
+                id: socket.id,
+                roomId: roomId,
+                username: username, 
+            }
+        });
+
+
+        // 2. Retrieve list of Users in the room 
+        const usersInRoom = await prisma.user.findMany({
+            where: {
+                roomId: roomId
+            }
+        });
+
         // Respond with room info
         // (here we could also check the username and deny access if it was already in use)
 		callback({
             success: true,
-            room: room,
-            /*
             room: {
                 id: room.id, 
                 name: room.name,
+                users: usersInRoom, // 2. Respond with list of Users in the room
+            },
+
+            /**
+             u could also do this: 
+             room {
+                ...room,
                 users: [],
-            }
-            */
+             }
+             */
         });  // response
 
         // Broadcast to everyone in the room (including ourselves) that a user has joined
