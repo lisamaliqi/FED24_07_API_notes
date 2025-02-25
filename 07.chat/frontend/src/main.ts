@@ -69,6 +69,9 @@ const addMessageToChat = (payload: ChatMessageData, ownMessage = false) => {
 
 	// Append LI to messages list
 	messagesEl.appendChild(msgEl);
+
+    // Scroll down to the last message automatically, but very smooth ;)
+    msgEl.scrollIntoView({ behavior: 'smooth' });
 };
 
 
@@ -96,6 +99,9 @@ const addNoticeToChat = (msg: string, timestamp?: number) => {
 
 	// Append LI to messages list
 	messagesEl.appendChild(noticeEl);
+
+    // Scroll down to the last notice automatically, but very smooth ;)
+    noticeEl.scrollIntoView({ behavior: 'smooth' });
 };
 
 
