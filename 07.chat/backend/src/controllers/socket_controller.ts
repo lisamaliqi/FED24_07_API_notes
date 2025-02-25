@@ -101,6 +101,10 @@ export const handleConnection = (
              */
         });  // response
 
+        /**
+         * @todo Broadcast list of users in the room to everyone except ourselves
+         */
+
         // Broadcast to everyone in the room (including ourselves) that a user has joined
         io.to(roomId).emit("userJoined", username, Date.now());
 	});
