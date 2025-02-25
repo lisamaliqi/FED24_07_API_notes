@@ -43,24 +43,40 @@ export const handleConnection = (
 	});
 
     // Listen for a user join request
-	socket.on("userJoinRequest", (username, roomId, callback) => {  // request
+	socket.on("userJoinRequest", async (username, roomId, callback) => {  // request
 		debug("👶🏽 User %s from socket %s wants to join room %s", username, socket.id, roomId);
 
         // Get room from database
+        const room = await prisma.room.findUnique({
+            where: {
+                id: roomId,
+            }
+        });
 
         // If room was not found  -> respond with success = false
+        if (!room) {
+            callback({
+                success: false,
+                room: null,
+            });
+            return; //important to have return or else the code will continue running, not good
+        };
 
         // Join room `roomId`
         socket.join(roomId);
 
-		// Always let the user in (for now 😇)
-		// We probably should check if the username is already in use
-		// and if so, deny access
         // Respond with room info
         // (here we could also check the username and deny access if it was already in use)
 		callback({
             success: true,
-            room: null,
+            room: room,
+            /*
+            room: {
+                id: room.id, 
+                name: room.name,
+                users: [],
+            }
+            */
         });  // response
 
         // Broadcast to everyone in the room (including ourselves) that a user has joined
