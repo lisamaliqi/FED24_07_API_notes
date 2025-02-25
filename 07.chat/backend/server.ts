@@ -9,6 +9,7 @@ import http from "http";
 import { Server } from "socket.io";
 import { handleConnection } from "./src/controllers/socket_controller";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/types/SocketEvents.types";
+import prisma from './src/prisma';
 
 // Read port to start server on from `.env`, otherwise default to port 3000
 const PORT = Number(process.env.PORT) || 3000;
@@ -36,10 +37,24 @@ io.on("connection", (socket) => {
 	handleConnection(socket, io);
 });
 
+
 /**
- * Listen on provided port, on all network interfaces.
+ * Delete all users from the database when server starts, THEN start server 
  */
-httpServer.listen(PORT);
+prisma.user.deleteMany()
+    .then(() => {
+        console.log('Deleted all users from database! 😈');
+
+        /**
+         * Listen on provided port, on all network interfaces.
+         */
+        httpServer.listen(PORT);
+    })
+    .catch(err => {
+        console.error('🚨 Could not delete all users, whaaaaat???', err);
+    });
+
+
 
 /**
  * Event listener for HTTP server "error" event.
