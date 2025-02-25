@@ -46,13 +46,22 @@ export const handleConnection = (
 	socket.on("userJoinRequest", (username, roomId, callback) => {  // request
 		debug("👶🏽 User %s from socket %s wants to join room %s", username, socket.id, roomId);
 
+        // Get room from database
+
+        // If room was not found  -> respond with success = false
+
         // Join room `roomId`
         socket.join(roomId);
 
 		// Always let the user in (for now 😇)
 		// We probably should check if the username is already in use
 		// and if so, deny access
-		callback(true);  // response
+        // Respond with room info
+        // (here we could also check the username and deny access if it was already in use)
+		callback({
+            success: true,
+            room: null,
+        });  // response
 
         // Broadcast to everyone in the room (including ourselves) that a user has joined
         io.to(roomId).emit("userJoined", username, Date.now());

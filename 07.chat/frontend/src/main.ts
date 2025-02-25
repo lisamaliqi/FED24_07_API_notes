@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import "./assets/scss/style.scss";
 // import { ClientToServerEvents, ServerToClientEvents } from "../shared/types/SocketEvents.types";
-import { ChatMessageData, ClientToServerEvents, ServerToClientEvents } from "../../shared/types/SocketEvents.types"
+import { ChatMessageData, ClientToServerEvents, ServerToClientEvents, UserJoinResponse } from "../../shared/types/SocketEvents.types"
 
 const SOCKET_HOST = import.meta.env.VITE_SOCKET_HOST as string;
 console.log("SOCKET_HOST:", SOCKET_HOST);
@@ -148,11 +148,11 @@ const showLoginView = () => {
  * Socket Handlers
  */
 
-const userJoinRequestCallback = (success: boolean) => {
+const userJoinRequestCallback = (response: UserJoinResponse) => {
     // This will only be executed once the server has responded
-    console.log("Join was successful?", success);
+    console.log("Join response?", response);
 
-    if (!success) {
+    if (!response.success) {
         alert("NO ACCESS 4 U!");
         return;
     }
