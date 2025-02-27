@@ -2,6 +2,7 @@ import { io, Socket } from "socket.io-client";
 import "./assets/scss/style.scss";
 // import { ClientToServerEvents, ServerToClientEvents } from "../shared/types/SocketEvents.types";
 import { ChatMessageData, ClientToServerEvents, ServerToClientEvents, UserJoinResponse } from "../../shared/types/SocketEvents.types"
+import { User } from "@shared/types/Models.types";
 
 const SOCKET_HOST = import.meta.env.VITE_SOCKET_HOST as string;
 console.log("SOCKET_HOST:", SOCKET_HOST);
@@ -143,6 +144,15 @@ const showLoginView = () => {
 };
 
 
+// Update list of online users in the room
+const updateOnlineUsers = (users: User[]) => {
+    const onlineUsersEl = document.querySelector('#online-users') as HTMLUListElement;
+    onlineUsersEl.innerHTML = users
+        .map(user => `<li>${user.username}</li>`)
+        .join('');
+};
+
+
 
 /**
  * Socket Handlers
@@ -162,10 +172,7 @@ const userJoinRequestCallback = (response: UserJoinResponse) => {
     chatTitleEl.innerText = response.room.name;
 
     // Update list of online users in the room
-    const onlineUsersEl = document.querySelector('#online-users') as HTMLUListElement;
-    onlineUsersEl.innerHTML = response.room.users
-        .map(user => `<li>${user.username}</li>`)
-        .join('');
+    updateOnlineUsers(response.room.users);
 
     // Show chat view
     showChatView();
@@ -209,11 +216,8 @@ socket.io.on("reconnect", () => {
 socket.on('usersInRoom', (users) => {
     console.log('Got a new list of online users📃', users);
 
-     // Update list of online users in the room
-     const onlineUsersEl = document.querySelector('#online-users') as HTMLUListElement;
-     onlineUsersEl.innerHTML = users
-         .map(user => `<li>${user.username}</li>`)
-         .join('');
+    // Update list of online users in the room
+    updateOnlineUsers(users);
     
 });
 
