@@ -16,5 +16,8 @@ export const getUsersInRoom = (roomId: string) => {
         where: {
             roomId: roomId
         },
+        orderBy: {
+            username: 'asc',
+        },
     });
 };
