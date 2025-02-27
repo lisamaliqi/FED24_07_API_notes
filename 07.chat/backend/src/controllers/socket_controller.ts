@@ -4,8 +4,8 @@
 import Debug from "debug";
 import { Server, Socket } from "socket.io";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/types/SocketEvents.types";
-import prisma from "../prisma";
 import { createUser, deleteUser, getUser, getUsersInRoom } from "../services/user_service";
+import { getRoom, getRooms } from "../services/room_service";
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller');
@@ -22,11 +22,7 @@ export const handleConnection = (
     socket.on('getRoomList', async (callback) => {
         debug('🏠Got request for rooms!');
 
-        const rooms = await prisma.room.findMany({
-            orderBy: {
-                name: 'asc', //sortera i bokstavsordning
-            },
-        });
+        const rooms = await getRooms();
         debug('Found the rooms, sending list of rooms %o', rooms);
 
         // Send list of rooms as acknowledgement of the event 
@@ -48,11 +44,7 @@ export const handleConnection = (
 		debug("👶🏽 User %s from socket %s wants to join room %s", username, socket.id, roomId);
 
         // Get room from database
-        const room = await prisma.room.findUnique({
-            where: {
-                id: roomId,
-            }
-        });
+        const room = await getRoom(roomId);
 
         // If room was not found  -> respond with success = false
         if (!room) {

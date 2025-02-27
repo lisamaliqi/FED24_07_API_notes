@@ -1,0 +1,32 @@
+/**
+ * ROOM Service
+ */
+
+import prisma from "../prisma";
+
+/**
+ * Get all rooms
+ * 
+ * @returns All rooms
+ */
+export const getRooms = () => {
+    return prisma.room.findMany({
+        orderBy: {
+            name: 'asc', //sortera i bokstavsordning
+        },
+    });
+};
+
+/**
+ * Get a single room
+ * 
+ * @param roomId Room Id (socket.id)
+ * @returns room
+ */
+export const getRoom = (roomId: string) => {
+    return prisma.room.findUnique({
+        where: {
+            id: roomId,
+        }
+    });
+};
