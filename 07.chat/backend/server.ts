@@ -10,6 +10,7 @@ import { Server } from "socket.io";
 import { handleConnection } from "./src/controllers/socket_controller";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/types/SocketEvents.types";
 import { deleteAllUsers } from "./src/services/user_service";
+import { instrument } from "@socket.io/admin-ui";
 
 // Read port to start server on from `.env`, otherwise default to port 3000
 const PORT = Number(process.env.PORT) || 3000;
@@ -25,9 +26,29 @@ const httpServer = http.createServer(app);
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
 	cors: {
 		credentials: true,
-		origin: "*",
+		origin: [
+            'http://localhost:5173',
+            'https://admin.socket.io',
+        ],
 	},
 });
+
+
+/**
+ * Set up socket.io admin (but only if we have set a password)
+ */
+if(process.env.SOCKET_IO_ADMIN_PASSWORD) {
+    console.log('Setting up socket.io admin UI');
+
+    instrument(io, {
+        auth: {
+            type: 'basic',
+            username: 'admin',
+            password: process.env.SOCKET_IO_ADMIN_PASSWORD,
+        },
+    });
+};
+
 
 /**
  * Handle incoming Socket.IO connection
