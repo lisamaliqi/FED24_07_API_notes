@@ -219,6 +219,13 @@ socket.on("userJoined", (username, timestamp) => {
 });
 
 
+// Listen for when a user leaves the chat
+socket.on("userLeft", (username, timestamp) => {
+    console.log("😔 a user has left the chat", username, timestamp);
+    addNoticeToChat(`😳${username} has left the building`, timestamp);
+});
+
+
 
 
 /**
