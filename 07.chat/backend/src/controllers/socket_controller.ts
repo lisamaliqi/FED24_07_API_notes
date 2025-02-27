@@ -5,6 +5,7 @@ import Debug from "debug";
 import { Server, Socket } from "socket.io";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/types/SocketEvents.types";
 import prisma from "../prisma";
+import { getUsersInRoom } from "../services/user_service";
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller');
@@ -76,11 +77,7 @@ export const handleConnection = (
 
 
         // 2. Retrieve list of Users in the room 
-        const usersInRoom = await prisma.user.findMany({
-            where: {
-                roomId: roomId
-            }
-        });
+        const usersInRoom = await getUsersInRoom(roomId);
 
         // Respond with room info
         // (here we could also check the username and deny access if it was already in use)
@@ -133,11 +130,8 @@ export const handleConnection = (
         });
 
         // Retrieve a list of users still in the room
-        const usersInRoom = await prisma.user.findMany({
-            where: {
-                roomId: user.roomId
-            }
-        });
+        const usersInRoom = await getUsersInRoom(user.roomId);
+
 
         
         // Broadcast a notice to the room that the user has left
