@@ -4,6 +4,7 @@ export {}
 // Events emitted by the server to the client
 export interface ServerToClientEvents {
     chatMessage: (payload: ChatMessageData) => void;
+    usersInRoom: (users: User[]) => void;
     userJoined: (username: string, timestamp: number) => void;
     userLeft: (username: string, timestamp: number) => void;
 }

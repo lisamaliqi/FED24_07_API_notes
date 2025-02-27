@@ -205,6 +205,19 @@ socket.io.on("reconnect", () => {
 });
 
 
+// Listen for an updated list of online users
+socket.on('usersInRoom', (users) => {
+    console.log('Got a new list of online users📃', users);
+
+     // Update list of online users in the room
+     const onlineUsersEl = document.querySelector('#online-users') as HTMLUListElement;
+     onlineUsersEl.innerHTML = users
+         .map(user => `<li>${user.username}</li>`)
+         .join('');
+    
+});
+
+
 // Listen for new chat messages
 socket.on("chatMessage", (payload) => {
 	console.log("📨 YAY SOMEONE WROTE SOMETHING!!!!!!!", payload);

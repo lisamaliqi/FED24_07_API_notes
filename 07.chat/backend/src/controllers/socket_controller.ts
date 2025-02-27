@@ -101,12 +101,12 @@ export const handleConnection = (
              */
         });  // response
 
-        /**
-         * @todo Broadcast list of users in the room to everyone except ourselves
-         */
-
+        
         // Broadcast to everyone in the room (including ourselves) that a user has joined
         io.to(roomId).emit("userJoined", username, Date.now());
+
+        // Broadcast a new list of users in the room everytime a user joins (so every user can see who's in the room)
+        io.to(roomId).emit('usersInRoom', usersInRoom);
 	});
 
 	// Handle a user disconnecting
@@ -132,13 +132,19 @@ export const handleConnection = (
             },
         });
 
-        /**
-         * @todo Broadcast a notice to the room that the user has left
-         */
+        // Retrieve a list of users still in the room
+        const usersInRoom = await prisma.user.findMany({
+            where: {
+                roomId: user.roomId
+            }
+        });
+
+        
+        // Broadcast a notice to the room that the user has left
         io.to(user.roomId).emit('userLeft', user.username, Date.now());
 
-        /**
-         * @todo Also broadcast a new list of users in the room
-         */
+        
+        // Also broadcast a new list of users in the room
+        io.to(user.roomId).emit('usersInRoom', usersInRoom);
 	});
 };
