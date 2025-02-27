@@ -148,7 +148,11 @@ const showLoginView = () => {
 const updateOnlineUsers = (users: User[]) => {
     const onlineUsersEl = document.querySelector('#online-users') as HTMLUListElement;
     onlineUsersEl.innerHTML = users
-        .map(user => `<li>${user.username}</li>`)
+        .map(user => 
+            user.id === socket.id
+            ? `<li class="me"><span">&#x1f9b8</span>${user.username}</li>`
+            : `<li><span>🦹🏻</span>${user.username} </li>`
+        )
         .join('');
 };
 
