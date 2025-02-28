@@ -17,11 +17,13 @@ export const getRooms = () => {
     });
 };
 
+
+
 /**
  * Get a single room
  * 
- * @param roomId Room Id (socket.id)
- * @returns room
+ * @param roomId Room ID
+ * @returns Room
  */
 export const getRoom = (roomId: string) => {
     return prisma.room.findUnique({

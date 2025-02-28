@@ -25,7 +25,7 @@ model User {
 
 
 model Message {
-    id          String  @id @map("_id")
+    id          String  @id @default(auto()) @map("_id") @db.ObjectId
     content     String
     timestamp   Int
     username    String

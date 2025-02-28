@@ -10,3 +10,12 @@ export interface User {
     username: string;
     roomId: string;         //objectId from room db in api07chat
 }
+/* 
+
+export interface Message {
+    id: string;
+    content: string;
+    timestamp: number;
+    username: string;
+    roomId: string;
+} */

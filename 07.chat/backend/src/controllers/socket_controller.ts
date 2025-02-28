@@ -6,6 +6,7 @@ import { Server, Socket } from "socket.io";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/types/SocketEvents.types";
 import { createUser, deleteUser, getUser, getUsersInRoom } from "../services/user_service";
 import { getRoom, getRooms } from "../services/room_service";
+import { createMessage } from "../services/message_service";
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller');
@@ -32,11 +33,18 @@ export const handleConnection = (
     }); 
 
     // Listen for incoming chat messages
-	socket.on("sendChatMessage", (payload) => {
+	socket.on("sendChatMessage", async (payload) => {
 		debug("📨 New chat message", socket.id, payload);
-
+        
+        // Broadcast first -> then save to database
+        // Save first will give out a delay
 		// Broadcast message to everyone connected EXCEPT the sender
 		socket.to(payload.roomId).emit("chatMessage", payload);
+		debug("📨 Broadcasted chat message to room %s", payload.roomId);
+        
+        // Save to Database
+        const savedMessage = await createMessage(payload);
+        debug('saved chat message!', savedMessage);
 	});
 
     // Listen for a user join request
