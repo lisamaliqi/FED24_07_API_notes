@@ -6,7 +6,7 @@ import { Server, Socket } from "socket.io";
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/types/SocketEvents.types";
 import { createUser, deleteUser, getUser, getUsersInRoom } from "../services/user_service";
 import { getRoom, getRooms } from "../services/room_service";
-import { createMessage } from "../services/message_service";
+import { createMessage, getLatestMessagesByRoom } from "../services/message_service";
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller');
@@ -77,6 +77,9 @@ export const handleConnection = (
         // 2. Retrieve list of Users in the room 
         const usersInRoom = await getUsersInRoom(roomId);
 
+        // retrieve messages sent to the room (last 24h and max 100 messages)
+        const messages = await getLatestMessagesByRoom(roomId);
+
         // Respond with room info
         // (here we could also check the username and deny access if it was already in use)
 		callback({
@@ -84,6 +87,7 @@ export const handleConnection = (
             room: {
                 id: room.id, 
                 name: room.name,
+                messages: messages,
                 users: usersInRoom, // 2. Respond with list of Users in the room
             },
 

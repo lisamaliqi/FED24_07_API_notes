@@ -40,6 +40,21 @@ const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOS
  * Functions
  */
 
+// Add message history to chat
+const addMessageHistoryToChat = (messageHistory: ChatMessageData[]) => {
+    console.log('🍍Adding messages to chat...');
+    
+    //clear any previous messages from the chat
+    messageEl.innerHTML = '';
+
+    //loop over messages and add them to the chat
+    messageHistory.forEach(message => {
+        addMessageToChat(message);
+    });
+};
+
+
+
 // add message to chat
 const addMessageToChat = (payload: ChatMessageData, ownMessage = false) => {
 	// Create a new LI element
@@ -170,11 +185,14 @@ const userJoinRequestCallback = (response: UserJoinResponse) => {
         alert("Could not join room (for some reason...)");
         return;
     };
-
+    
     // Update chat view title with room name
     const chatTitleEl = document.querySelector('#chat-title') as HTMLHeadingElement;
     chatTitleEl.innerText = response.room.name;
-
+    
+    //Add message history to chat
+    addMessageHistoryToChat(response.room.messages);
+    
     // Update list of online users in the room
     updateOnlineUsers(response.room.users);
 

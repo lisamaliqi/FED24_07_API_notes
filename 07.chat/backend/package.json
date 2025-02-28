@@ -10,7 +10,8 @@
         "check:1-tsc": "tsc --noEmit",
         "check:2-type-coverage": "type-coverage --at-least 100",
         "check": "run-s check:*",
-        "dev": "cross-env DEBUG=chat:*,socket.io:socket nodemon server.ts",
+        "debug": "cross-env DEBUG=chat:*,socket.io:socket nodemon server.ts",
+        "dev": "cross-env DEBUG=chat:* nodemon server.ts",
         "start": "NODE_ENV=production node dist/server.js"
     },
     "prisma": {

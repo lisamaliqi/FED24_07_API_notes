@@ -35,12 +35,13 @@ export interface ChatMessageData {
 }
 
 // Room with users
-export interface RoomWithUsers extends Room { //This is an extension of Room (from models.types.ts)
+export interface RoomInfo extends Room { //This is an extension of Room (from models.types.ts)
     users: User[];
+    messages: ChatMessageData[];
 }
 
 // User join response 
 export interface UserJoinResponse {
     success: boolean,
-    room: RoomWithUsers | null
+    room: RoomInfo | null
 }
