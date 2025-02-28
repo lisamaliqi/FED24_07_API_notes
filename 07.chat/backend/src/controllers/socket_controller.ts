@@ -78,7 +78,7 @@ export const handleConnection = (
         const usersInRoom = await getUsersInRoom(roomId);
 
         // retrieve messages sent to the room (last 24h and max 100 messages)
-        const messages = await getLatestMessagesByRoom(roomId);
+        const messages = await getLatestMessagesByRoom(roomId, 60 * 60 * 24);
 
         // Respond with room info
         // (here we could also check the username and deny access if it was already in use)
