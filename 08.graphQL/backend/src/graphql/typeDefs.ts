@@ -24,6 +24,8 @@ const typeDefs = `#graphql
     type Publisher {
         id: Int!
         name: String!
+
+        books: [Book!]
     }
 
 
