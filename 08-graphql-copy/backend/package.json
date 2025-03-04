@@ -1,0 +1,36 @@
+{
+  "name": "08-graphql-backend",
+  "version": "1.0.0",
+  "main": "dist/src/server.js",
+  "scripts": {
+    "build": "env-cmd --silent bash scripts/build.sh",
+    "build-app": "tsc",
+    "dev": "cross-env DEBUG=prisma-books:* nodemon src/server.ts",
+    "start": "node dist/src/server.js"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^22.10.7",
+    "env-cmd": "^10.1.0",
+    "nodemon": "^3.1.9",
+    "prisma": "^6.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.11.3",
+    "@prisma/client": "^6.4.1",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "debug": "^4.4.0",
+    "dotenv": "^16.4.7"
+  }
+}
