@@ -9,6 +9,8 @@ const typeDefs = `#graphql
         id: Int!
         name: String!
         birthyear: Int
+
+        books: [Book!]
     }
 
 	# This "Book" type defines the queryable fields for every book in our data source.
@@ -16,8 +18,10 @@ const typeDefs = `#graphql
         id: Int!
         title: String!
         pages: Int!
-        publisherId: Int 
+        
+        authors: [Author!]
 
+        publisherId: Int 
         publisher: Publisher
 	}
 
