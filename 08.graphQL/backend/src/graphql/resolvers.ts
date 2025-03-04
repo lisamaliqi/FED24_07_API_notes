@@ -3,8 +3,14 @@ import prisma from "../prisma";
 
 const resolvers = {
     Query: {
+        authors: () => {
+            return prisma.author.findMany();
+        },
         books: () => {
             return prisma.book.findMany();
+        },
+        publishers: () => {
+            return prisma.publisher.findMany();
         },
     },
 };

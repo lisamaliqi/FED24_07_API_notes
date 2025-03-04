@@ -17,6 +17,9 @@ const server = new ApolloServer({
     typeDefs: typeDefs,
 });
 
+/**
+ * GET ACCESS TO THIS IN LOCALHOST:4000 ON WEBSITE
+ */
 
 // Start a standalone server on the specified port
 startStandaloneServer(server, {
