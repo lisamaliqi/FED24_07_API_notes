@@ -12,6 +12,14 @@ const resolvers = {
         publishers: () => {
             return prisma.publisher.findMany();
         },
+        
+        book: (_parent: void, args: { id: number }) => {
+            return prisma.book.findUnique({
+                where: {
+                    id: args.id,
+                },
+            });
+        },
     },
 };
 
