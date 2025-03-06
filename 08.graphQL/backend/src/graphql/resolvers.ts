@@ -4,32 +4,32 @@ import prisma from "../prisma";
 
 const resolvers = {
     Query: {
-        authors: () => {
+        authors: () => { // Query for all authors
             return prisma.author.findMany();
         },
-        books: () => {
+        books: () => { // Query for all books
             return prisma.book.findMany();
         },
-        publishers: () => {
+        publishers: () => { // Query for all publishers
             return prisma.publisher.findMany();
         },
 
 
-        author: (_parent: void, args: { id: number }) => {
+        author: (_parent: void, args: { id: number }) => { // Query for a single author
             return prisma.author.findUnique({
                 where: {
                     id: args.id,
                 },
             });
         },
-        book: (_parent: void, args: { id: number }) => {
+        book: (_parent: void, args: { id: number }) => { // Query for a single book
             return prisma.book.findUnique({
                 where: {
                     id: args.id,
                 },
             });
         },
-        publisher: (_parent: void, args: { id: number }) => {
+        publisher: (_parent: void, args: { id: number }) => { // Query for a single publisher
             return prisma.publisher.findUnique({
                 where: {
                     id: args.id,
@@ -41,7 +41,7 @@ const resolvers = {
 
     // Resolvers for the relation fields
     Author: {
-        books: (parent: Author) => {
+        books: (parent: Author) => { // Query for all books by an author
             return prisma.author.findUnique({
                 where: {
                     id: parent.id,
@@ -51,7 +51,7 @@ const resolvers = {
         },
     },
     Book: {
-        authors: (parent: Book) => {
+        authors: (parent: Book) => { // Query for all authors of a book
             return prisma.book.findUnique({
                 where: {
                     id: parent.id,
@@ -59,7 +59,7 @@ const resolvers = {
             })
             .authors(); 
         },
-        publisher: (parent: Book) => {
+        publisher: (parent: Book) => { // Query for the publisher of a book
             return prisma.book.findUnique({
                 where: {
                     id: parent.id,
@@ -69,7 +69,7 @@ const resolvers = {
         },
     },
     Publisher: {
-        books: (parent: Publisher) => {
+        books: (parent: Publisher) => { // Query for all books by a publisher
             return prisma.publisher.findUnique({
                 where: {
                     id: parent.id,
