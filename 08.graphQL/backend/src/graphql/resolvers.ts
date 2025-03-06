@@ -92,6 +92,14 @@ const resolvers = {
 				data: args.data,
 			});
 		},
+        updateAuthor: (_parent: void, args: { id: number, data: Omit<Author, "id"> }) => { // Mutation to update an author
+            return prisma.author.update({
+                where: {
+                    id: args.id,
+                },
+                data: args.data,
+            });
+        },
         deleteAuthor: (_parent: void, args: { id: number }) => { // Mutation to delete an author
             return prisma.author.delete({
                 where: {

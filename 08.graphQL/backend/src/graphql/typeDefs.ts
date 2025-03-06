@@ -51,6 +51,7 @@ const typeDefs = `#graphql
 	type Mutation {
 		# Author create, update and delete
 		createAuthor(data: AuthorInput): Author
+        updateAuthor(id: Int!, data: AuthorInput): Author
         deleteAuthor(id: Int!): Author
 	}
 
