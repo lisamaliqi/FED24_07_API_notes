@@ -3,6 +3,7 @@ import { Author, Book, Publisher } from "@prisma/client";
 import prisma from "../prisma";
 
 const resolvers = {
+    // Resolvers for the Query fields
     Query: {
         authors: () => { // Query for all authors
             return prisma.author.findMany();
@@ -78,6 +79,20 @@ const resolvers = {
             .books();
         },
     },
+
+
+
+
+
+    
+	// Resolvers for the Mutation fields
+	Mutation: {
+		createAuthor: (_parent: void, args: { data: Omit<Author, "id"> }) => { // Mutation to create an author
+			return prisma.author.create({
+				data: args.data,
+			});
+		},
+	},
 };
 
 export default resolvers;
