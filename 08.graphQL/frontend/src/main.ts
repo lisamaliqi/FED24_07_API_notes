@@ -1,5 +1,5 @@
 import { ApolloClient, DocumentNode, InMemoryCache, gql } from "@apollo/client/core";
-import { Book } from "./types";
+import { BookWithAuthors } from "./types";
 
 /**
  * Create a new ApolloClient instance
@@ -10,17 +10,21 @@ const client = new ApolloClient({
 });
 
 /**
- * Define a query to get all books
+ * Define a query to get all books (with authors)
  */
-export const GET_BOOKS = gql`
-		query GetBooks {
-			books {
+const GET_BOOKS_WITH_AUTHORS = gql`
+	query GetBooksWithAuthors {
+		books {
+			id
+			title
+			pages
+			authors {
 				id
-				title
-				pages
+				name
 			}
 		}
-	`;
+    }
+`;
 
 /**
  * Execute a query against the GraphQL server
@@ -28,7 +32,7 @@ export const GET_BOOKS = gql`
  * @param query
  * @returns
  */
-export const execQuery = async (query: DocumentNode) => {
+const execQuery = async (query: DocumentNode) => {
 	const result = await client.query({
 		query,
 	});
@@ -39,7 +43,7 @@ export const execQuery = async (query: DocumentNode) => {
 /**
  * Execute the query to get all books
  */
-const bookResult: { books: Book[] } = await execQuery(GET_BOOKS);
+const bookResult: { books: BookWithAuthors[] } = await execQuery(GET_BOOKS_WITH_AUTHORS);
 console.log(bookResult);
 
 /**
@@ -48,5 +52,10 @@ console.log(bookResult);
 const booksEl = document.querySelector("#books") as HTMLUListElement;
 booksEl.innerHTML = bookResult.books
 	.map((book) =>
-		`<li>#${book.id} - ${book.title} (${book.pages})</li>`)
+		`<li>
+			#${book.id} - ${book.title} (${book.pages} pages)
+			by ${book.authors.length > 0
+				? book.authors.map(author => author.name).join(", ")
+				: 'anonymous'}
+		</li>`)
 	.join("");
