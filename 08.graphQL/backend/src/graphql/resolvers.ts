@@ -84,7 +84,7 @@ const resolvers = {
 
 
 
-    
+
 	// Resolvers for the Mutation fields
 	Mutation: {
 		createAuthor: (_parent: void, args: { data: Omit<Author, "id"> }) => { // Mutation to create an author
@@ -92,6 +92,13 @@ const resolvers = {
 				data: args.data,
 			});
 		},
+        deleteAuthor: (_parent: void, args: { id: number }) => { // Mutation to delete an author
+            return prisma.author.delete({
+                where: {
+                    id: args.id,
+                },
+            });
+        },
 	},
 };
 
