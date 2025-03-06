@@ -131,6 +131,34 @@ const resolvers = {
                 },
             });
         },
+        addAuthorToBook: (_parent: void, args: { authorId: number, bookId: number }) => { // Mutation to add an author to a book
+            return prisma.book.update({
+                where: {
+                    id: args.bookId,
+                },
+                data: {
+                    authors: {
+                        connect: {
+                            id: args.authorId,
+                        },
+                    },
+                },
+            });
+        },
+        removeAuthorFromBook: (_parent: void, args: { authorId: number, bookId: number }) => { // Mutation to remove an author to a book
+            return prisma.book.update({
+                where: {
+                    id: args.bookId,
+                },
+                data: {
+                    authors: {
+                        disconnect: {
+                            id: args.authorId,
+                        },
+                    },
+                },
+            });
+        },
 
 
         // Publisher create, update and delete

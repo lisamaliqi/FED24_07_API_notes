@@ -54,10 +54,16 @@ const typeDefs = `#graphql
 		updateAuthor(id: Int!, data: UpdateAuthorInput!): Author
         deleteAuthor(id: Int!): Author
 
+
         # Book create, update and delete
 		createBook(data: CreateBookInput!): Book
 		updateBook(id: Int!, data: UpdateBookInput!): Book
         deleteBook(id: Int!): Book
+
+        # Book Add/remove author 
+        addAuthorToBook(authorId: Int!, bookId: Int!): Book!
+        removeAuthorFromBook(authorId: Int!, bookId: Int!): Book!
+
 
         # Publisher create, update and delete
 		createPublisher(data: CreatePublisherInput!): Publisher
