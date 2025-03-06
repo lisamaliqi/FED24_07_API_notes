@@ -53,12 +53,33 @@ const typeDefs = `#graphql
 		createAuthor(data: AuthorInput): Author
         updateAuthor(id: Int!, data: AuthorInput): Author
         deleteAuthor(id: Int!): Author
+
+        # Book create, update and delete
+		createBook(data: BookInput): Book
+        updateBook(id: Int!, data: BookInput): Book
+        deleteBook(id: Int!): Book
+
+        # Publisher create, update and delete
+		createPublisher(data: PublisherInput): Publisher
+        updatePublisher(id: Int!, data: PublisherInput): Publisher
+        deletePublisher(id: Int!): Publisher
 	}
 
-	# Input types
+
+    # These are the types that are used as input to the mutations
 	input AuthorInput {
 		name: String!
 		birthyear: Int
+	}
+
+	input BookInput {
+		title: String!
+		pages: Int!
+        publisherId: Int
+	}
+
+	input PublisherInput {
+		name: String!
 	}
 `;
 
